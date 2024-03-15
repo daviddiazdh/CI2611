@@ -1,9 +1,35 @@
 import tkinter as tk
+from typing import List
+
+N = int(input("Diga la dimensión de su tablero: "))
+M : int = 500
 
 ventana = tk.Tk() #siempre debe haber ventana
 ventana.geometry("1200x600")
-
 tablero = tk.Canvas(ventana, width = 500, height = 500)
+
+
+
+class Casilla:
+    def __init__(self,
+                 lienzo : tk.Canvas, 
+                 esquina_superior : List[int],
+                 lado : int,
+                 estado : int):
+        
+        self.lienzo = tablero
+        self.esquina_superior = [0,0]
+        self.lado = N/M
+
+
+        
+
+        
+
+
+
+
+
 tablero.place(x = 433, y = 114)
 rect_00 = tablero.create_rectangle(0,0,100,100, activeoutline= "green" , fill="white")
 rect_01 = tablero.create_rectangle(100,0,200,100, activeoutline= "green" , fill="white")
