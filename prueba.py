@@ -1,6 +1,7 @@
 import tkinter as tk
 
 ventana = tk.Tk() #siempre debe haber ventana
+ventana.geometry("1200x600")
 
 tablero = tk.Canvas(ventana, width = 500, height = 500)
 tablero.place(x = 433, y = 114)
