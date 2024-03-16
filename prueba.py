@@ -28,7 +28,7 @@ class Casilla:
     def crear_circulo(self):
         global turno
         self.tablero.create_oval(self.esq_superior_izq[0] + self.lado / 6, self.esq_superior_izq[1] + self.lado / 6, 
-                            self.esq_superior_izq[0] + self.lado * (5/6), self.esq_superior_izq[1] + self.lado * (5/6), fill = "black")
+                            self.esq_superior_izq[0] + self.lado * (5/6), self.esq_superior_izq[1] + self.lado * (5/6), fill = "red")
         self.tablero.create_oval(self.esq_superior_izq[0] + self.lado / 6 + self.lado / 5, self.esq_superior_izq[1] + self.lado / 6 + self.lado / 5, 
                             self.esq_superior_izq[0] + self.lado * (5/6) - self.lado/5, self.esq_superior_izq[1] + self.lado * (5/6) - self.lado / 5, fill = "white")
         self.estado = 2
@@ -68,6 +68,7 @@ class Tablero:
     # def empatar_tablero ():
     # def reiniciar_tablero ():
 
+##Declaración de la ventana y llamada a la primera clase padre Tablero
 raiz = tk.Tk()
 alto_pantalla = raiz.winfo_screenheight()
 ancho_pantalla = raiz.winfo_screenwidth()
