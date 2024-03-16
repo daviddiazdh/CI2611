@@ -8,8 +8,6 @@ ventana = tk.Tk() #siempre debe haber ventana
 ventana.geometry("1200x600")
 tablero = tk.Canvas(ventana, width = 500, height = 500)
 
-
-
 class Casilla:
     def __init__(self,
                  lienzo : tk.Canvas, 
@@ -20,15 +18,27 @@ class Casilla:
         self.lienzo = tablero
         self.esquina_superior = [0,0]
         self.lado = N/M
-
-
+        self.contador = 0
+        self.dibujar_casilla()
+    
+    def dibujar_casilla(self):
+        self.casilla = self.lienzo.create_rectangle(self.esquina_superior[0], 
+                                                    self.esquina_superior[1], 
+                                                    self.esquina_superior[0] + self.lado, 
+                                                    self.esquina_superior[1] + self.lado, 
+                                                    fill = "white")
         
+        if self.contador < N:
+            self.esquina_superior[0] = self.esquina_superior[0] + N
+            self.contador += 1
+        else: 
+            self.esquina_superior[0] = self.esquina_superior[0] + N
+            self.esquina_superior[1] = self.esquina_superior[1] + N
+            self.contador = 0
 
-        
 
-
-
-
+# class Casillas_N_en_Raya:
+#     def __init__():
 
 tablero.place(x = 433, y = 114)
 rect_00 = tablero.create_rectangle(0,0,100,100, activeoutline= "green" , fill="white")
@@ -43,7 +53,6 @@ def crear_cruz(event):
 
 def crear_círculo(event):
     tablero.create_oval(120,20,180,80, fill = "blue")
-
 
 tablero.tag_bind(
     rect_00,
