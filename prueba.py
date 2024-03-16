@@ -68,5 +68,7 @@ class Tablero:
 
 raiz = tk.Tk()
 raiz.geometry("1200x600") 
+raiz.wm_iconbitmap('tres-en-raya1.ico')
+raiz.wm_title('N en Raya 3D')
 tablero: Tablero = Tablero(raiz, M)
 raiz.mainloop()
