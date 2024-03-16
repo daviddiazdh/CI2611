@@ -1,6 +1,16 @@
 import tkinter as tk
 from typing import List, Tuple, Callable, Union
+import winsound
 
+##windsound 
+def play(path):
+    winsound.PlaySound(path, winsound.SND_LOOP + winsound.SND_ASYNC)
+
+cancion = 'Mario64.wav'
+play(cancion)
+
+
+##Código base
 M : int = 400 #pixeles del tablero
 N = int(input("Diga la dimensión de su tablero: "))
 turno: int = 1          
