@@ -1,7 +1,7 @@
 import tkinter as tk
 from typing import List, Tuple, Callable, Union
 
-M : int = 500 #pixeles del tablero
+M : int = 400 #pixeles del tablero
 N = int(input("Diga la dimensión de su tablero: "))
 turno: int = 1          
 
@@ -27,8 +27,10 @@ class Casilla:
 
     def crear_circulo(self):
         global turno
-        self.tablero.create_oval(self.esq_superior_izq[0] + self.lado / 5, self.esq_superior_izq[1] + self.lado / 5, 
-                            self.esq_superior_izq[0] + self.lado * (4/5), self.esq_superior_izq[1] + self.lado * (4/5), fill = "red")
+        self.tablero.create_oval(self.esq_superior_izq[0] + self.lado / 6, self.esq_superior_izq[1] + self.lado / 6, 
+                            self.esq_superior_izq[0] + self.lado * (5/6), self.esq_superior_izq[1] + self.lado * (5/6), fill = "black")
+        self.tablero.create_oval(self.esq_superior_izq[0] + self.lado / 6 + self.lado / 5, self.esq_superior_izq[1] + self.lado / 6 + self.lado / 5, 
+                            self.esq_superior_izq[0] + self.lado * (5/6) - self.lado/5, self.esq_superior_izq[1] + self.lado * (5/6) - self.lado / 5, fill = "white")
         self.estado = 2
         turno = 1
 
@@ -43,7 +45,7 @@ class Casilla:
 class Tablero:
     def __init__(self, raiz, M):
         self.tablero: tk.Canvas = tk.Canvas(raiz, width = M, height = M, background="black")
-        self.tablero.place(x = 433, y = 144)
+        self.tablero.place(x = 100, y = 100)
         self.tablero.update()
 
         self.estado: bool = False #False si está jugando, True si está ganado
@@ -67,7 +69,19 @@ class Tablero:
     # def reiniciar_tablero ():
 
 raiz = tk.Tk()
-raiz.geometry("1200x600") 
+alto_pantalla = raiz.winfo_screenheight()
+ancho_pantalla = raiz.winfo_screenwidth()
+
+alto_ventana = 600
+ancho_ventana = 600
+
+posicion_x= round((ancho_pantalla - ancho_ventana)/2)
+posicion_y = round((alto_pantalla - alto_ventana)/2)
+
+posicionraiz = str(ancho_ventana)+"x"+str(alto_ventana)+"+"+str(posicion_x)+"+"+str(posicion_y - 25)
+raiz.geometry(posicionraiz)
+raiz.resizable(0, 0)
+
 raiz.wm_iconbitmap('tres-en-raya1.ico')
 raiz.wm_title('N en Raya 3D')
 tablero: Tablero = Tablero(raiz, M)
