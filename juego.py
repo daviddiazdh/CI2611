@@ -91,7 +91,7 @@ class Tablero:
             for i in range(len(fila) - 1):
                 if (fila[i].estado == 0 or fila[i].estado != fila[i + 1].estado):
                     break
-                elif (fila[i].estado == fila[i + 1].estado and i == len(fila) - 2):
+                elif (fila[i].estado != 0 and fila[i].estado == fila[i + 1].estado and i == len(fila) - 2):
                     self.ganar_tablero()
                 else:
                     pass
@@ -102,7 +102,7 @@ class Tablero:
             for j in range(N - 1):
                 if (self.casillas[j][i].estado == 0 or self.casillas[j][i].estado != self.casillas[j + 1][i].estado):
                     contador = 0
-                elif (self.casillas[j][i].estado == self.casillas[j + 1][i].estado):
+                elif (self.casillas[j][i].estado != 0 and self.casillas[j][i].estado == self.casillas[j + 1][i].estado):
                     contador += 1
                 else:
                     contador = 0
@@ -124,6 +124,12 @@ class Tablero:
         else:
             pass
 
+        #Verifica que no estén llenas las casillas:
+        if  all( all(j.estado != 0 for j in i) for i in self.casillas):
+            texto_displayer("¡Empate!")
+            self.reiniciar_tablero()
+
+            
     def ganar_tablero (self):
         if (turno == 1): #El ganador fue el jugador 1
             texto_displayer("¡Jugador 1 ha ganado!")
@@ -135,6 +141,7 @@ class Tablero:
             puntuacion[1] += 1
             actualizar_puntuacion(puntuacion)
             self.reiniciar_tablero()
+    
     def reiniciar_tablero (self):
         self.tablero.place_forget()
         tablero = Tablero(raiz, M)
@@ -215,7 +222,9 @@ def texto_displayer (texto: str):
         font=("Arial Black", 15)
     )
     temp_display[0].place_forget()
+    temp_display.pop(0)
     temp_display.append(texto_d)
+    print(temp_display)
     texto_d.place(x=155, y=488)
 
 
@@ -236,6 +245,7 @@ def actualizar_puntuacion (puntaje: List[int]):
         font= ("Arial Black", 20)
     )
     temp_puntuacion[0].place_forget()
+    temp_puntuacion.pop(0)
     temp_puntuacion.append(label_puntaje)
     label_puntaje.place(x= 250,y= 5)
 
