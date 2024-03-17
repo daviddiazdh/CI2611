@@ -224,7 +224,6 @@ def texto_displayer (texto: str):
     temp_display[0].place_forget()
     temp_display.pop(0)
     temp_display.append(texto_d)
-    print(temp_display)
     texto_d.place(x=155, y=488)
 
 
