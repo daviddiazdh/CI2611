@@ -28,6 +28,7 @@ class Casilla:
 
     def crear_cruz(self):
         global turno
+        play('mouse-click.wav')
         self.tablero.create_line(self.esq_superior_izq[0] + self.lado / 5, self.esq_superior_izq[1] + self.lado / 5, 
                             self.esq_superior_izq[0] + self.lado * (4/5), self.esq_superior_izq[1] + self.lado * (4/5), fill = "black", width = self.lado / 5)
         self.tablero.create_line(self.esq_superior_izq[0] + self.lado * (4/5), self.esq_superior_izq[1] + self.lado / 5,
@@ -44,6 +45,7 @@ class Casilla:
         
     def crear_circulo(self):
         global turno
+        play('mouse-click.wav')
         self.tablero.create_oval(self.esq_superior_izq[0] + self.lado / 6, self.esq_superior_izq[1] + self.lado / 6, 
                             self.esq_superior_izq[0] + self.lado * (5/6), self.esq_superior_izq[1] + self.lado * (5/6), fill = "red")
         self.tablero.create_oval(self.esq_superior_izq[0] + self.lado / 6 + self.lado / 5, self.esq_superior_izq[1] + self.lado / 6 + self.lado / 5, 
@@ -89,6 +91,8 @@ class Tablero:
 
     # def eliminar_tablero ():
     def procesar_tablero (self):
+
+        empate : int = 1
         #Verifica filas
         for fila in self.casillas:
             for i in range(len(fila) - 1):
@@ -96,6 +100,7 @@ class Tablero:
                     break
                 elif (fila[i].estado != 0 and fila[i].estado == fila[i + 1].estado and i == len(fila) - 2):
                     self.ganar_tablero()
+                    empate = 0
                 else:
                     pass
         #Verifica columnas
@@ -111,6 +116,7 @@ class Tablero:
                     contador = 0
             if (contador == N - 1):
                 self.ganar_tablero()
+                empate = 0
             else:
                 pass
         #Verifica diagonal
@@ -124,11 +130,12 @@ class Tablero:
 
         if (all((self.casillas[i][N - 1 - i].estado != 0 and self.casillas[0][N - 1].estado == self.casillas[i][N - 1 - i].estado) for i in range(N))):
             self.ganar_tablero()
+            empate = 0
         else:
             pass
 
         #Verifica que no estén llenas las casillas:
-        if  all( all(j.estado != 0 for j in i) for i in self.casillas):
+        if  all( all(j.estado != 0 for j in i) for i in self.casillas) and empate == 1:
             texto_displayer("¡Empate!")
             self.reiniciar_tablero()
 
