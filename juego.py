@@ -105,7 +105,7 @@ class Tablero:
                     pass
         #Verifica columnas
         contador: int = 0
-        for i in range(N - 1):
+        for i in range(N):
             contador = 0
             for j in range(N - 1):
                 if (self.casillas[j][i].estado == 0 or self.casillas[j][i].estado != self.casillas[j + 1][i].estado):
@@ -123,6 +123,7 @@ class Tablero:
         
         if (all((self.casillas[i][i].estado != 0 and self.casillas[0][0].estado == self.casillas[i][i].estado) for i in range(N))):
             self.ganar_tablero()
+            empate = 0
         else:
             pass
 
