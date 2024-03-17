@@ -1,13 +1,11 @@
 import tkinter as tk
 from typing import List, Tuple, Callable, Union
 import winsound
+from time import sleep
 
 ##windsound 
 def play(path):
-    winsound.PlaySound(path, winsound.SND_LOOP + winsound.SND_ASYNC)
-
-#cancion = 'Mario64.wav'
-#play(cancion)
+    winsound.PlaySound(path, winsound.SND_ASYNC)
 
 ##Código base
 M : int = 300 #pixeles del tablero
@@ -35,6 +33,8 @@ class Casilla:
         self.tablero.create_line(self.esq_superior_izq[0] + self.lado * (4/5), self.esq_superior_izq[1] + self.lado / 5,
                             self.esq_superior_izq[0] + self.lado / 5, self.esq_superior_izq[1] + self.lado * (4/5), fill = "black", width = self.lado / 5)
         self.estado = 1
+        self.tablero.update() 
+        sleep(0.5)
         ##Procesa tablero
         self.al_cambiar()
 
@@ -49,6 +49,9 @@ class Casilla:
         self.tablero.create_oval(self.esq_superior_izq[0] + self.lado / 6 + self.lado / 5, self.esq_superior_izq[1] + self.lado / 6 + self.lado / 5, 
                             self.esq_superior_izq[0] + self.lado * (5/6) - self.lado/5, self.esq_superior_izq[1] + self.lado * (5/6) - self.lado / 5, fill = "white")
         self.estado = 2
+
+        self.tablero.update() 
+        sleep(0.5)
         ##Procesa tablero
         self.al_cambiar()
 
@@ -135,11 +138,15 @@ class Tablero:
             texto_displayer("¡Jugador 1 ha ganado!")
             puntuacion[0] += 1
             actualizar_puntuacion(puntuacion)
+            cancion = 'level.wav'
+            play(cancion)
             self.reiniciar_tablero()
         else:
             texto_displayer("¡Jugador 2 ha ganado!")
             puntuacion[1] += 1
             actualizar_puntuacion(puntuacion)
+            cancion = 'level.wav'
+            play(cancion)
             self.reiniciar_tablero()
     
     def reiniciar_tablero (self):
