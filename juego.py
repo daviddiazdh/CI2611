@@ -1,11 +1,5 @@
 import tkinter as tk
 from typing import List, Tuple, Callable, Union
-import winsound
-from time import sleep
-
-##windsound 
-def play(path):
-    winsound.PlaySound(path, winsound.SND_ASYNC)
 
 ##Código base
 M : int = 300 #pixeles del tablero
@@ -29,14 +23,12 @@ class Casilla:
 
     def crear_cruz(self):
         global turno
-        play('mouse-click.wav')
         self.tablero.create_line(self.esq_superior_izq[0] + self.lado / 5, self.esq_superior_izq[1] + self.lado / 5, 
                             self.esq_superior_izq[0] + self.lado * (4/5), self.esq_superior_izq[1] + self.lado * (4/5), fill = "black", width = self.lado / 5)
         self.tablero.create_line(self.esq_superior_izq[0] + self.lado * (4/5), self.esq_superior_izq[1] + self.lado / 5,
                             self.esq_superior_izq[0] + self.lado / 5, self.esq_superior_izq[1] + self.lado * (4/5), fill = "black", width = self.lado / 5)
         self.estado = 1
         self.tablero.update() 
-        sleep(0.5)
 
         ##Cambia turno en et_turno:
         turno = 2
@@ -47,7 +39,6 @@ class Casilla:
         
     def crear_circulo(self):
         global turno
-        play('mouse-click.wav')
         self.tablero.create_oval(self.esq_superior_izq[0] + self.lado / 6, self.esq_superior_izq[1] + self.lado / 6, 
                             self.esq_superior_izq[0] + self.lado * (5/6), self.esq_superior_izq[1] + self.lado * (5/6), fill = "red")
         self.tablero.create_oval(self.esq_superior_izq[0] + self.lado / 6 + self.lado / 5, self.esq_superior_izq[1] + self.lado / 6 + self.lado / 5, 
@@ -55,7 +46,6 @@ class Casilla:
         self.estado = 2
 
         self.tablero.update() 
-        sleep(0.5)
 
         ##Cambia turno en et_turno:
         turno = 1
@@ -157,8 +147,6 @@ class Tablero:
                 cambia_turno()
             partida += 1
             actualizar_puntuacion(puntuacion)
-            cancion = 'level.wav'
-            play(cancion)
             self.reiniciar_tablero()
         else:
             texto_displayer("¡Jugador 2 ha ganado!")
@@ -168,8 +156,6 @@ class Tablero:
                 cambia_turno()
             partida += 1
             actualizar_puntuacion(puntuacion)
-            cancion = 'level.wav'
-            play(cancion)
             self.reiniciar_tablero()
 
     

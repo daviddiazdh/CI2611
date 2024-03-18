@@ -21,5 +21,4 @@ raiz.wm_title('N en Raya 3D')
 
 
 
-
 raiz.mainloop()
