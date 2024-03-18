@@ -12,6 +12,7 @@ M : int = 300 #pixeles del tablero
 N = int(input("Diga la dimensión de su tablero: "))
 turno: int = 1          
 puntuacion: List[int] = [0,0]
+partida : int = 0
 
 class Casilla:
     def __init__(self,
@@ -36,12 +37,13 @@ class Casilla:
         self.estado = 1
         self.tablero.update() 
         sleep(0.5)
-        ##Procesa tablero
-        self.al_cambiar()
 
         ##Cambia turno en et_turno:
         turno = 2
         cambia_turno()
+
+        ##Procesa tablero
+        self.al_cambiar()
         
     def crear_circulo(self):
         global turno
@@ -54,12 +56,13 @@ class Casilla:
 
         self.tablero.update() 
         sleep(0.5)
-        ##Procesa tablero
-        self.al_cambiar()
 
         ##Cambia turno en et_turno:
         turno = 1
         cambia_turno()
+
+        ##Procesa tablero
+        self.al_cambiar()
         
     def dibujar_casilla(self):
         global turno
@@ -134,17 +137,25 @@ class Tablero:
             empate = 0
         else:
             pass
-
+        
+        global partida
         #Verifica que no estén llenas las casillas:
         if  all( all(j.estado != 0 for j in i) for i in self.casillas) and empate == 1:
             texto_displayer("¡Empate!")
+            partida += 1
             self.reiniciar_tablero()
 
-            
+    
     def ganar_tablero (self):
-        if (turno == 1): #El ganador fue el jugador 1
+        global partida
+        global turno
+        if (turno == 2): #El ganador fue el jugador 1
             texto_displayer("¡Jugador 1 ha ganado!")
             puntuacion[0] += 1
+            if partida % 2 == 1: 
+                turno = 1
+                cambia_turno()
+            partida += 1
             actualizar_puntuacion(puntuacion)
             cancion = 'level.wav'
             play(cancion)
@@ -152,10 +163,15 @@ class Tablero:
         else:
             texto_displayer("¡Jugador 2 ha ganado!")
             puntuacion[1] += 1
+            if partida % 2 == 0: 
+                turno = 2
+                cambia_turno()
+            partida += 1
             actualizar_puntuacion(puntuacion)
             cancion = 'level.wav'
             play(cancion)
             self.reiniciar_tablero()
+
     
     def reiniciar_tablero (self):
         self.tablero.place_forget()
@@ -249,7 +265,7 @@ label_puntuacion: tk.Label = tk.Label(
     text= "0  -  0",
     font=("Arial Black", 20)
 )
-label_puntuacion.place(x= 250,y= 5)
+label_puntuacion.place(x= 485,y= 5)
 temp_puntuacion.append(label_puntuacion)
 
 def actualizar_puntuacion (puntaje: List[int]):
@@ -261,7 +277,7 @@ def actualizar_puntuacion (puntaje: List[int]):
     temp_puntuacion[0].place_forget()
     temp_puntuacion.pop(0)
     temp_puntuacion.append(label_puntaje)
-    label_puntaje.place(x= 250,y= 5)
+    label_puntaje.place(x= 485,y= 5)
 
 
 raiz.wm_iconbitmap('tres-en-raya1.ico')
