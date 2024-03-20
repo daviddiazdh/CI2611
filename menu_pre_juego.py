@@ -56,7 +56,7 @@ def menu_pj(menu):
         jugador_2 = nombre_jugador_2.get()
         N = dimension.get()
 
-        juego.iniciar_juego(menu, N)
+        juego.iniciar_juego(menu, N, jugador_1, jugador_2)
     
     def regresar():
         fondo_etiqueta.place_forget()

@@ -7,7 +7,7 @@ import menu_pre_juego
 turno: int = 1
 partida : int = 0
 
-def iniciar_juego(raiz, dimensiones):
+def iniciar_juego(raiz, dimensiones, jugador_1, jugador_2):
 
     global turno
     global partida
@@ -73,16 +73,18 @@ def iniciar_juego(raiz, dimensiones):
                 lambda event: ((self.crear_cruz() if (turno == 1) else self.crear_circulo()) if (self.estado == 0) else print("No puedes hacer esto."))) #cambiar esto en un futuro
 
     class Tablero:
-        def __init__(self, raiz, M, N):
+        def __init__(self, raiz, M, N, al_regresar : Callable):
             self.tablero: tk.Canvas = tk.Canvas(raiz, width = M, height = M, background="black")
             self.tablero.place(x = 150, y = 100)
             self.tablero.update()
             self.N = N
             self.lado: int = M
+            self.al_regresar = al_regresar
             self.casillas: List[List[Casilla]] = []
             self.dibujar_tablero()
 
         def dibujar_tablero (self):
+            self.crear_boton_regresar()
             j: int = 0
             while (j < self.N):
                 self.casillas.append([])
@@ -92,7 +94,10 @@ def iniciar_juego(raiz, dimensiones):
                     i += 1
                 j += 1
 
-        # def eliminar_tablero ():
+        def eliminar_tablero (self):
+            self.tablero.place_forget()
+            self.al_regresar()
+
         def procesar_tablero (self):
 
             empate : int = 1
@@ -141,7 +146,7 @@ def iniciar_juego(raiz, dimensiones):
             global partida
             #Verifica que no estén llenas las casillas:
             if  all( all(j.estado != 0 for j in i) for i in self.casillas) and empate == 1:
-                texto_displayer("             ¡Empate!")
+                texto_displayer("> ¡Empate!")
                 partida += 1
                 self.reiniciar_tablero()
 
@@ -150,7 +155,7 @@ def iniciar_juego(raiz, dimensiones):
             global partida
             global turno
             if (turno == 2): #El ganador fue el jugador 1
-                texto_displayer("   ¡Jugador 1 ha ganado!")
+                texto_displayer(f" > ¡{jugador_1} ha ganado!")
                 puntuacion[0] += 1
                 if partida % 2 == 1: 
                     turno = 1
@@ -159,7 +164,7 @@ def iniciar_juego(raiz, dimensiones):
                 actualizar_puntuacion(puntuacion)
                 self.reiniciar_tablero()
             else:
-                texto_displayer("   ¡Jugador 2 ha ganado!")
+                texto_displayer(f" > ¡{jugador_2} ha ganado!")
                 puntuacion[1] += 1
                 if partida % 2 == 0: 
                     turno = 2
@@ -171,7 +176,30 @@ def iniciar_juego(raiz, dimensiones):
         
         def reiniciar_tablero (self):
             self.tablero.place_forget()
-            tablero = Tablero(raiz, M, dimensiones)
+            tablero = Tablero(raiz, M, dimensiones, self.al_regresar)
+
+        ##Boton regresar:
+        def crear_boton_regresar(self):
+            def cambio_color_1(evento):
+                self.boton_regresar['bg']= 'black'
+                self.boton_regresar['fg']= 'white'
+
+            def cambio_color_2(evento):
+                self.boton_regresar['bg']= 'white'
+                self.boton_regresar['fg']= 'black'
+
+            self.boton_regresar : tk.Button = tk.Button(raiz, text='Regresar', font= ('Arial Black', 10), background="white", foreground="black", command= self.eliminar_tablero)
+            self.boton_regresar.place(x=460, y=400)
+
+            self.boton_regresar.bind(
+                '<Enter>',
+                cambio_color_1
+                )
+
+            self.boton_regresar.bind(
+                '<Leave>',
+                cambio_color_2
+                )
 
     
     #Funciones para botones#
@@ -190,13 +218,7 @@ def iniciar_juego(raiz, dimensiones):
         lienzo_cuadro.place_forget()
         menu_pre_juego.menu_pj(raiz)
 
-    def cambio_color_1(evento):
-        boton_regresar['bg']= 'black'
-        boton_regresar['fg']= 'white'
-
-    def cambio_color_2(evento):
-        boton_regresar['bg']= 'white'
-        boton_regresar['fg']= 'black'
+    
 
     ##Declaración de elementos:
     #--------------------------------------------------------------------------------------#
@@ -228,7 +250,8 @@ def iniciar_juego(raiz, dimensiones):
     #text_displayer cero
     label_display: tk.Label = tk.Label(
         raiz,
-        text= "",
+        text= " > ",
+        font= ('Arial Black', 10),
         fg='white',
         background='black'
     )
@@ -244,19 +267,6 @@ def iniciar_juego(raiz, dimensiones):
         font=("Arial Black", 20),
         background='white',
         highlightthickness=0
-    )
-
-    ##Botón de regresar
-    boton_regresar : tk.Button = tk.Button(raiz, text='Regresar', font= ('Arial Black', 10), background="white", foreground="black", command=eliminar_imagen)
-
-    boton_regresar.bind(
-        '<Enter>',
-        cambio_color_1
-    )
-
-    boton_regresar.bind(
-        '<Leave>',
-        cambio_color_2
     )
 
     ##Cuadro negro superior
@@ -281,7 +291,7 @@ def iniciar_juego(raiz, dimensiones):
         lienzo_display.place(x=150, y=420)
 
         #text_displayer cero
-        label_display.place(x=155, y=428)
+        label_display.place(x=155, y=432)
         temp_display.append(label_display)
 
         ##Display
@@ -291,13 +301,10 @@ def iniciar_juego(raiz, dimensiones):
         label_puntuacion.place(x= 485,y= 5)
         temp_puntuacion.append(label_puntuacion)
 
-        ##Boton regresar
-        boton_regresar.place(x=460, y=400)
-        
         ##Cuadro negro superior
         lienzo_cuadro.place(x=150, y=80)
 
-        tablero : Tablero = Tablero(raiz,M,dimensiones)
+        tablero : Tablero = Tablero(raiz,M,dimensiones, eliminar_imagen)
         
     elementos_constantes()
 
@@ -321,14 +328,14 @@ def iniciar_juego(raiz, dimensiones):
         texto_d: tk.Label = tk.Label(
             raiz,
             text= texto,
-            font=("Arial Black", 15),
+            font=("Arial Black", 10),
             fg='white',
             background='black'
         )
         temp_display[0].place_forget()
         temp_display.pop(0)
         temp_display.append(texto_d)
-        texto_d.place(x=155, y=428)
+        texto_d.place(x=155, y=432)
 
     def actualizar_puntuacion (puntaje: List[int]):
         label_puntaje: tk.Label = tk.Label(

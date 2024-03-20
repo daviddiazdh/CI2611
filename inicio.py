@@ -22,6 +22,7 @@ raiz.resizable(0, 0)
 raiz['bg'] = 'white'
 
 raiz.wm_iconbitmap('tres-en-raya1.ico')
+
 raiz.wm_title('N en Raya 3D')
 ##-----------------------------------------------------------##
 
