@@ -219,7 +219,6 @@ def iniciar_juego(raiz, dimensiones, jugador_1, jugador_2):
         menu_pre_juego.menu_pj(raiz)
 
     
-
     ##Declaración de elementos:
     #--------------------------------------------------------------------------------------#
     ##Fondo
@@ -349,8 +348,6 @@ def iniciar_juego(raiz, dimensiones, jugador_1, jugador_2):
         temp_puntuacion.pop(0)
         temp_puntuacion.append(label_puntaje)
         label_puntaje.place(x= 485,y= 5)
-
-
 
 
     raiz.mainloop()

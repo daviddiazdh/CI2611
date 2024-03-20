@@ -7,7 +7,7 @@ jugador_1: str = ""
 jugador_2: str = ""
 N: str = ""
 
-def menu_pj(menu):
+def menu_pj(menu, error = ""):
     
     ##Prueba imagen
     fondo = tk.PhotoImage(file='Fondo.png')
@@ -36,6 +36,10 @@ def menu_pj(menu):
     dimension : tk.Entry = tk.Entry(menu, font= ('Arial Black',10), width=28)
     dimension.place(x= 130, y= 300)
 
+    ##Etiqueta Error: 
+    etiqueta_error : tk.Label = tk.Label(menu, text= error, font= ('Arial Black', 8), background="white", foreground='red')
+    etiqueta_error.place(x=130, y=320)
+
     def iniciar():
         fondo_etiqueta.place_forget()
         etiqueta_datos.place_forget()
@@ -51,10 +55,20 @@ def menu_pj(menu):
         global jugador_1
         global jugador_2
         global N
+        try:
+            jugador_1 = nombre_jugador_1.get()
+            jugador_2 = nombre_jugador_2.get()
+            assert jugador_1 != jugador_2, "Error"
+        except AssertionError:
+            menu_pj(menu, "Los nombres no pueden ser iguales.")
 
-        jugador_1 = nombre_jugador_1.get()
-        jugador_2 = nombre_jugador_2.get()
-        N = dimension.get()
+        
+        try:
+            N = dimension.get()
+            assert N.isdigit() == True, "Error"
+            assert int(N) > 2, "Error"
+        except AssertionError:
+            menu_pj(menu, "Las dimensiones de su tablero son incorrectas.")
 
         juego.iniciar_juego(menu, N, jugador_1, jugador_2)
     
