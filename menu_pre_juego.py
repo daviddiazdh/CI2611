@@ -43,6 +43,7 @@ def menu_pj(menu, error = ""):
     def iniciar():
         fondo_etiqueta.place_forget()
         etiqueta_datos.place_forget()
+        etiqueta_error.place_forget()
         etiqueta_1.place_forget()
         nombre_jugador_1.place_forget()
         etiqueta_2.place_forget()
@@ -64,6 +65,7 @@ def menu_pj(menu, error = ""):
 
         
         try:
+            assert dimension.get() != "", "Error"
             N = dimension.get()
             assert N.isdigit() == True, "Error"
             assert int(N) > 2, "Error"
