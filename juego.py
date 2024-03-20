@@ -190,6 +190,14 @@ def iniciar_juego(raiz, dimensiones):
         lienzo_cuadro.place_forget()
         menu_pre_juego.menu_pj(raiz)
 
+    def cambio_color_1(evento):
+        boton_regresar['bg']= 'black'
+        boton_regresar['fg']= 'white'
+
+    def cambio_color_2(evento):
+        boton_regresar['bg']= 'white'
+        boton_regresar['fg']= 'black'
+
     ##Declaración de elementos:
     #--------------------------------------------------------------------------------------#
     ##Fondo
@@ -239,7 +247,17 @@ def iniciar_juego(raiz, dimensiones):
     )
 
     ##Botón de regresar
-    boton_regresar : tk.Button = tk.Button(raiz, text='Regresar', font= ('Arial Black', 10), background="black", foreground="white", command=eliminar_imagen)
+    boton_regresar : tk.Button = tk.Button(raiz, text='Regresar', font= ('Arial Black', 10), background="white", foreground="black", command=eliminar_imagen)
+
+    boton_regresar.bind(
+        '<Enter>',
+        cambio_color_1
+    )
+
+    boton_regresar.bind(
+        '<Leave>',
+        cambio_color_2
+    )
 
     ##Cuadro negro superior
     lienzo_cuadro: tk.Canvas = tk.Canvas(raiz, width= 302, height= 20, background='black', highlightthickness=0)
@@ -275,7 +293,7 @@ def iniciar_juego(raiz, dimensiones):
 
         ##Boton regresar
         boton_regresar.place(x=460, y=400)
-
+        
         ##Cuadro negro superior
         lienzo_cuadro.place(x=150, y=80)
 

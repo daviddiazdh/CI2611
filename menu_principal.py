@@ -32,7 +32,6 @@ def cambio_color_2(e):
 boton_jugar : tk.Button = tk.Button(raiz, text='Jugar', font= ('Arial Black', 10), background="white", foreground="black")
 boton_jugar.place(x=270, y=220)
 
-
 boton_jugar.bind(
     '<Enter>',
     cambio_color_1
