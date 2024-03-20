@@ -1,5 +1,6 @@
 from typing import List, Tuple, Union
 import tkinter as tk
+import menu_principal
 import menu_pre_juego
 import juego
 
@@ -24,7 +25,7 @@ raiz.wm_iconbitmap('tres-en-raya1.ico')
 raiz.wm_title('N en Raya 3D')
 ##-----------------------------------------------------------##
 
-menu_pre_juego.menu_pj(raiz)
+menu_principal.menu_principal(raiz)
 
 
 raiz.mainloop()

@@ -1,6 +1,7 @@
 import tkinter as tk
 from typing import List
 import juego
+import menu_principal
 
 jugador_1: str = ""
 jugador_2: str = ""
@@ -56,14 +57,28 @@ def menu_pj(menu):
         N = dimension.get()
 
         juego.iniciar_juego(menu, N)
-        
+    
+    def regresar():
+        fondo_etiqueta.place_forget()
+        etiqueta_datos.place_forget()
+        etiqueta_1.place_forget()
+        nombre_jugador_1.place_forget()
+        etiqueta_2.place_forget()
+        nombre_jugador_2.place_forget()
+        etiqueta_3.place_forget()
+        dimension.place_forget()
+        boton_inicio.place_forget()
+        boton_regresar.place_forget()
+        menu_principal.menu_principal(menu)
+
+
 
     ##Botón de inicio
     boton_inicio : tk.Button = tk.Button(menu, text='Iniciar', font= ('Arial Black', 10), background="white" ,command= iniciar)
     boton_inicio.place(x=300, y=350)
 
     ##Botón de regresar
-    boton_regresar : tk.Button = tk.Button(menu, text='Regresar', font= ('Arial Black', 10), background="white")
+    boton_regresar : tk.Button = tk.Button(menu, text='Regresar', font= ('Arial Black', 10), background="white", command= regresar)
     boton_regresar.place(x=140, y=350)
 
     menu.mainloop()
