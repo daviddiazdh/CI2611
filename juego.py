@@ -1,5 +1,6 @@
 import tkinter as tk
 from typing import List, Tuple, Callable, Union
+import menu_pre_juego
 
 ##Código base
 M : int = 300 #pixeles del tablero
@@ -163,7 +164,12 @@ class Tablero:
         self.tablero.place_forget()
         tablero = Tablero(raiz, M)
 
+##Primera llamada al menu prejuego:
+raiz_1 = tk.Tk()
+menu_pre_juego.menu_pj(raiz_1)
+
 ##Declaración de la ventana y llamada a la primera clase padre Tablero
+
 raiz = tk.Tk()
 alto_pantalla = raiz.winfo_screenheight()
 ancho_pantalla = raiz.winfo_screenwidth()
@@ -177,18 +183,21 @@ posicion_y = round((alto_pantalla - alto_ventana)/2)
 posicionraiz = str(ancho_ventana)+"x"+str(alto_ventana)+"+"+str(posicion_x)+"+"+str(posicion_y - 25)
 raiz.geometry(posicionraiz)
 raiz.resizable(0, 0)
+raiz['bg'] = 'white'
 
 ## Display de Turno
 
 et_turno = tk.Label(
     raiz,
     text="Turno: ",
-    font=("Arial Black", 20)
+    font=("Arial Black", 20),
+    background='white',
+    highlightthickness=0,
 )
 
 et_turno.place(x=30, y=5)
 
-lienzo_turno: tk.Canvas = tk.Canvas(raiz, width=30,height=30)
+lienzo_turno: tk.Canvas = tk.Canvas(raiz, width=30,height=30, background='white', highlightthickness=0)
 lienzo_turno.place(x=135,y=13)
 
 temp: List[int] = []
@@ -249,7 +258,9 @@ temp_puntuacion: List[tk.Label] = []
 label_puntuacion: tk.Label = tk.Label(
     raiz,
     text= "0  -  0",
-    font=("Arial Black", 20)
+    font=("Arial Black", 20),
+    background='white',
+    highlightthickness=0
 )
 label_puntuacion.place(x= 485,y= 5)
 temp_puntuacion.append(label_puntuacion)
@@ -258,7 +269,9 @@ def actualizar_puntuacion (puntaje: List[int]):
     label_puntaje: tk.Label = tk.Label(
         raiz,
         text= f"{puntaje[0]}  -  {puntaje[1]}",
-        font= ("Arial Black", 20)
+        font= ("Arial Black", 20),
+        background='white',
+        highlightthickness=0
     )
     temp_puntuacion[0].place_forget()
     temp_puntuacion.pop(0)
