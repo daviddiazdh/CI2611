@@ -1,5 +1,6 @@
 import tkinter as tk
 from typing import List
+import time
 import juego
 import menu_principal
 
@@ -7,7 +8,7 @@ jugador_1: str = ""
 jugador_2: str = ""
 N: str = ""
 
-def menu_pj(menu, error = ""):
+def menu_pj(menu):
     
     ##Prueba imagen
     fondo = tk.PhotoImage(file='Fondo.png')
@@ -36,43 +37,42 @@ def menu_pj(menu, error = ""):
     dimension : tk.Entry = tk.Entry(menu, font= ('Arial Black',10), width=28)
     dimension.place(x= 130, y= 300)
 
-    ##Etiqueta Error: 
-    etiqueta_error : tk.Label = tk.Label(menu, text= error, font= ('Arial Black', 8), background="white", foreground='red')
-    etiqueta_error.place(x=130, y=320)
+
 
     def iniciar():
-        fondo_etiqueta.place_forget()
-        etiqueta_datos.place_forget()
-        etiqueta_error.place_forget()
-        etiqueta_1.place_forget()
-        nombre_jugador_1.place_forget()
-        etiqueta_2.place_forget()
-        nombre_jugador_2.place_forget()
-        etiqueta_3.place_forget()
-        dimension.place_forget()
-        boton_inicio.place_forget()
-        boton_regresar.place_forget()
-
+        
         global jugador_1
         global jugador_2
         global N
-        try:
-            jugador_1 = nombre_jugador_1.get()
-            jugador_2 = nombre_jugador_2.get()
-            assert jugador_1 != jugador_2, "Error"
-        except AssertionError:
-            menu_pj(menu, "Los nombres no pueden ser iguales.")
-
         
-        try:
-            assert dimension.get() != "", "Error"
-            N = dimension.get()
-            assert N.isdigit() == True, "Error"
-            assert int(N) > 2, "Error"
-        except AssertionError:
-            menu_pj(menu, "Las dimensiones de su tablero son incorrectas.")
-
-        juego.iniciar_juego(menu, N, jugador_1, jugador_2)
+        jugador_1 = nombre_jugador_1.get()
+        jugador_2 = nombre_jugador_2.get()
+        N = dimension.get()
+        contador : int = 0
+        if jugador_1 != jugador_2:
+            if all( i.isdigit() == True for i in N) and int(N) > 2:
+                fondo_etiqueta.place_forget()
+                etiqueta_datos.place_forget()
+                etiqueta_1.place_forget()
+                nombre_jugador_1.place_forget()
+                etiqueta_2.place_forget()
+                nombre_jugador_2.place_forget()
+                etiqueta_3.place_forget()
+                dimension.place_forget()
+                boton_inicio.place_forget()
+                boton_regresar.place_forget()
+                if contador == 1:
+                    etiqueta_error.place_forget()
+                juego.iniciar_juego(menu, N, jugador_1, jugador_2)
+            else: 
+                etiqueta_error : tk.Label = tk.Label(menu, text= "La dimensión de su tablero es incorrecta.", font= ('Arial Black', 8), background="white", foreground='red')
+                etiqueta_error.place(x=130, y=320)
+                contador = 1
+        else: 
+            ##Etiqueta Error: 
+            etiqueta_error : tk.Label = tk.Label(menu, text= "Los nombres no pueden ser iguales.", font= ('Arial Black', 8), background="white", foreground='red')
+            etiqueta_error.place(x=130, y=320)
+            contador = 1
     
     def regresar():
         fondo_etiqueta.place_forget()
