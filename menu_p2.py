@@ -4,9 +4,9 @@ import tkinter as tk
 boton_jugar : tk.Button = 0
 lista_boton : List[tk.Button] = []
 bandera :int = 0
-fondo = tk.PhotoImage(file='images/Fondo3.png')
 
 def crear_fondo_menu_p(raiz):
+    fondo = tk.PhotoImage(file='images/Fondo3.png')
     fondo_etiqueta = tk.Label(raiz, highlightthickness=0, image=fondo)
     fondo_etiqueta.place(x=0, y=0)
 
