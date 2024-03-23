@@ -1,5 +1,6 @@
 import tkinter as tk
 from typing import List, Tuple, Callable, Union
+import time 
 import menu_pre_juego
 
 ##Constantes del programa
@@ -107,6 +108,7 @@ def iniciar_juego(raiz, dimensiones, jugador_1, jugador_2):
                     if (fila[i].estado == 0 or fila[i].estado != fila[i + 1].estado):
                         break
                     elif (fila[i].estado != 0 and fila[i].estado == fila[i + 1].estado and i == len(fila) - 2):
+                        time.sleep(1)
                         self.ganar_tablero()
                         empate = 0
                     else:
@@ -123,6 +125,7 @@ def iniciar_juego(raiz, dimensiones, jugador_1, jugador_2):
                     else:
                         contador = 0
                 if (contador == self.N - 1):
+                    time.sleep(1)
                     self.ganar_tablero()
                     empate = 0
                 else:
@@ -130,6 +133,7 @@ def iniciar_juego(raiz, dimensiones, jugador_1, jugador_2):
             #Verifica diagonal
             
             if (all((self.casillas[i][i].estado != 0 and self.casillas[0][0].estado == self.casillas[i][i].estado) for i in range(self.N))):
+                time.sleep(1)
                 self.ganar_tablero()
                 empate = 0
             else:
@@ -138,6 +142,7 @@ def iniciar_juego(raiz, dimensiones, jugador_1, jugador_2):
             #Verifica diagonal secundaria
 
             if (all((self.casillas[i][self.N - 1 - i].estado != 0 and self.casillas[0][self.N - 1].estado == self.casillas[i][self.N - 1 - i].estado) for i in range(self.N))):
+                time.sleep(1)
                 self.ganar_tablero()
                 empate = 0
             else:
