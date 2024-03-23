@@ -1,6 +1,5 @@
 import tkinter as tk
 from typing import List
-import time
 import juego
 import menu_principal
 
@@ -11,7 +10,7 @@ N: str = ""
 def menu_pj(menu):
     
     ##Prueba imagen
-    fondo = tk.PhotoImage(file='Fondo.png')
+    fondo = tk.PhotoImage(file='images/Fondo.png')
     fondo_etiqueta = tk.Label(menu, highlightthickness=0, image=fondo)
     fondo_etiqueta.place(x=0, y=0)
 
@@ -37,8 +36,6 @@ def menu_pj(menu):
     dimension : tk.Entry = tk.Entry(menu, font= ('Arial Black',10), width=28)
     dimension.place(x= 130, y= 300)
 
-
-
     def iniciar():
         
         global jugador_1
@@ -49,8 +46,8 @@ def menu_pj(menu):
         jugador_2 = nombre_jugador_2.get()
         N = dimension.get()
         contador : int = 0
-        if jugador_1 != jugador_2:
-            if all( i.isdigit() == True for i in N) and int(N) > 2:
+        if jugador_1 != jugador_2 and jugador_1 != "" and jugador_2 != "":
+            if N != "" and all( i.isdigit() == True for i in N) and int(N) > 2:
                 fondo_etiqueta.place_forget()
                 etiqueta_datos.place_forget()
                 etiqueta_1.place_forget()

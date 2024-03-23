@@ -1,6 +1,6 @@
 import tkinter as tk
 from typing import List, Tuple, Callable, Union
-import time 
+from time import sleep 
 import menu_pre_juego
 
 ##Constantes del programa
@@ -68,10 +68,11 @@ def iniciar_juego(raiz, dimensiones, jugador_1, jugador_2):
         def dibujar_casilla(self):
             global turno
             casilla: int = self.tablero.create_rectangle(self.esq_superior_izq[0], self.esq_superior_izq[1], self.esq_superior_izq[0] + self.lado, self.esq_superior_izq[1] + self.lado, fill="white", outline="black")
+            nada : int = 0
             self.tablero.tag_bind(
                 casilla,
                 "<Button-1>",
-                lambda event: ((self.crear_cruz() if (turno == 1) else self.crear_circulo()) if (self.estado == 0) else print("No puedes hacer esto."))) #cambiar esto en un futuro
+                lambda event: ((self.crear_cruz() if (turno == 1) else self.crear_circulo()) if (self.estado == 0) else nada))
 
     class Tablero:
         def __init__(self, raiz, M, N, al_regresar : Callable):
@@ -108,7 +109,7 @@ def iniciar_juego(raiz, dimensiones, jugador_1, jugador_2):
                     if (fila[i].estado == 0 or fila[i].estado != fila[i + 1].estado):
                         break
                     elif (fila[i].estado != 0 and fila[i].estado == fila[i + 1].estado and i == len(fila) - 2):
-                        time.sleep(1)
+                        sleep(1)
                         self.ganar_tablero()
                         empate = 0
                     else:
@@ -125,7 +126,7 @@ def iniciar_juego(raiz, dimensiones, jugador_1, jugador_2):
                     else:
                         contador = 0
                 if (contador == self.N - 1):
-                    time.sleep(1)
+                    sleep(1)
                     self.ganar_tablero()
                     empate = 0
                 else:
@@ -133,7 +134,7 @@ def iniciar_juego(raiz, dimensiones, jugador_1, jugador_2):
             #Verifica diagonal
             
             if (all((self.casillas[i][i].estado != 0 and self.casillas[0][0].estado == self.casillas[i][i].estado) for i in range(self.N))):
-                time.sleep(1)
+                sleep(1)
                 self.ganar_tablero()
                 empate = 0
             else:
@@ -142,7 +143,7 @@ def iniciar_juego(raiz, dimensiones, jugador_1, jugador_2):
             #Verifica diagonal secundaria
 
             if (all((self.casillas[i][self.N - 1 - i].estado != 0 and self.casillas[0][self.N - 1].estado == self.casillas[i][self.N - 1 - i].estado) for i in range(self.N))):
-                time.sleep(1)
+                sleep(1)
                 self.ganar_tablero()
                 empate = 0
             else:
@@ -151,6 +152,7 @@ def iniciar_juego(raiz, dimensiones, jugador_1, jugador_2):
             global partida
             #Verifica que no estén llenas las casillas:
             if  all( all(j.estado != 0 for j in i) for i in self.casillas) and empate == 1:
+                sleep(1)
                 texto_displayer("> ¡Empate!")
                 partida += 1
                 self.reiniciar_tablero()
@@ -227,7 +229,7 @@ def iniciar_juego(raiz, dimensiones, jugador_1, jugador_2):
     ##Declaración de elementos:
     #--------------------------------------------------------------------------------------#
     ##Fondo
-    fondo = tk.PhotoImage(file='Fondo2.png')
+    fondo = tk.PhotoImage(file='images/Fondo2.png')
     fondo_etiqueta = tk.Label(raiz, highlightthickness=0, image=fondo,)
 
     ## Display de Turno

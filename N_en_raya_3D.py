@@ -21,7 +21,7 @@ raiz.geometry(posicionraiz)
 raiz.resizable(0, 0)
 raiz['bg'] = 'white'
 
-raiz.wm_iconbitmap('tres-en-raya1.ico')
+raiz.wm_iconbitmap('images/tres-en-raya1.ico')
 
 raiz.wm_title('N en Raya 3D')
 ##-----------------------------------------------------------##
@@ -29,5 +29,5 @@ raiz.wm_title('N en Raya 3D')
 menu_principal.menu_principal(raiz)
 
 
-raiz.mainloop()
+
 
