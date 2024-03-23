@@ -29,5 +29,7 @@ raiz.wm_title('N en Raya 3D')
 menu_principal.menu_principal(raiz)
 
 
+raiz.mainloop()
+
 
 

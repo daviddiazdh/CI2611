@@ -1,5 +1,8 @@
 from typing import List, Tuple, Union
 import tkinter as tk
+import todo_en_uno
+
+todo_en_uno.raiz
 
 boton_jugar : tk.Button = 0
 lista_boton : List[tk.Button] = []
