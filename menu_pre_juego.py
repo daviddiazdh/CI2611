@@ -47,7 +47,7 @@ dimension : tk.Entry = tk.Entry(creador_raiz.raiz, foreground='magenta3', font= 
 
 ##Etiqueta Error:
 lista_errores : List[tk.Label] = [] 
-etiqueta_error : tk.Label = tk.Label(creador_raiz.raiz, text= "", font= ('Arial Black', 8), background="white", foreground='red')
+etiqueta_error : tk.Label = tk.Label(creador_raiz.raiz, text= "", font= ('Arial Black', 8), background="white", foreground='magenta3')
 
 
 def iniciar():
@@ -73,7 +73,7 @@ def iniciar():
 def mostrar_error(texto):
     lista_errores[0].place_forget()
     lista_errores.pop(0)
-    etiqueta_error : tk.Label = tk.Label(creador_raiz.raiz, text= texto, font= ('Arial Black', 8), background="white", foreground='red')
+    etiqueta_error : tk.Label = tk.Label(creador_raiz.raiz, text= texto, font= ('Arial Black', 8), background="white", foreground='magenta3')
     etiqueta_error.place(x=130, y=320)
     lista_errores.append(etiqueta_error)
 

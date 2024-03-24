@@ -73,7 +73,7 @@ class Casilla:
 
     def dibujar_casilla(self):
         global turno
-        self.casilla: int = self.tablero.create_rectangle(self.esq_superior_izq[0], self.esq_superior_izq[1], self.esq_superior_izq[0] + self.lado, self.esq_superior_izq[1] + self.lado, fill="white", outline="black")
+        self.casilla: int = self.tablero.create_rectangle(self.esq_superior_izq[0], self.esq_superior_izq[1], self.esq_superior_izq[0] + self.lado, self.esq_superior_izq[1] + self.lado, fill= 'white', outline="black")
         nada : int = 0
         self.tablero.tag_bind(
             self.casilla,
@@ -100,14 +100,11 @@ class Tablero:
                 self.casillas[j].append(Casilla(self.tablero, (i * (self.lado / self.N), j * (self.lado / self.N)), self.procesar_tablero))
                 i += 1
             j += 1
-        
-        
-
+    
     def procesar_tablero (self):
 
         empate : int = 1
-        #Verifica filas
-        for fila in self.casillas:
+        for j, fila in enumerate(self.casillas):
             for i in range(len(fila) - 1):
                 if (fila[i].estado == 0 or fila[i].estado != fila[i + 1].estado):
                     break
@@ -116,6 +113,8 @@ class Tablero:
                     empate = 0
                 else:
                     pass
+        
+
         #Verifica columnas
         contador: int = 0
         for i in range(self.N):
