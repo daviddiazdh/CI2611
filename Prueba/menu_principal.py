@@ -53,7 +53,6 @@ def iniciar():
 ##Botón de salir
 boton_salir : tk.Button = tk.Button(creador_raiz.raiz, text='Salir', font= ('Arial Black', 20), background="white", foreground="black", command= salir)
 
-
 boton_salir.bind(
     '<Enter>',
     cambio_color_3

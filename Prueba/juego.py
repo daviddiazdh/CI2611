@@ -100,6 +100,8 @@ class Tablero:
                 self.casillas[j].append(Casilla(self.tablero, (i * (self.lado / self.N), j * (self.lado / self.N)), self.procesar_tablero))
                 i += 1
             j += 1
+        
+        
 
     def procesar_tablero (self):
 
@@ -197,6 +199,10 @@ def eliminar_imagen_juego():
     et_turno.place_forget()
     lienzo_turno.delete(cruz_1)
     lienzo_turno.delete(cruz_2)
+    lienzo_turno.delete(temp[0])
+    lienzo_turno.delete(temp[1])
+    temp.pop(0)
+    temp.pop(0)
     lienzo_turno.place_forget()
     lienzo_display.delete(display)
     lienzo_display.place_forget()
@@ -212,6 +218,10 @@ def eliminar_imagen_juego():
     lista_tableros.pop(0)
     boton_regresar.place_forget()
 
+    global turno
+    global puntuacion
+    turno = 1
+    puntuacion = [0,0]
     creador_raiz.raiz.quit()
 
 ##--------------------------------------------------------------------------------------#
@@ -271,7 +281,6 @@ lienzo_cuadro: tk.Canvas = tk.Canvas(creador_raiz.raiz, width= 302, height= 20, 
 ##Lista de tableros
 lista_tableros : List[Tablero] = []
 
-##Boton regresar:
 
 def cambio_color_1(evento):
     boton_regresar['bg']= 'black'
@@ -327,6 +336,7 @@ def iniciar():
     ##Boton regresar
     boton_regresar.place(x=460, y=400)
 
+    ##Tablero:
     tablero : Tablero = Tablero(creador_raiz.raiz, M, int(menu_pre_juego.N))
     lista_tableros.append(tablero)
 
@@ -334,6 +344,8 @@ def cambia_turno ():
     if (turno == 1):
         for e in temp:
             lienzo_turno.delete(e)
+        temp.pop(0)
+        temp.pop(0)
         cruz_1: int = lienzo_turno.create_line(5, 5, 25,25, width=8, fill="black")
         temp.append(cruz_1)
         cruz_2: int = lienzo_turno.create_line(5, 25, 25, 5, width=8, fill="black")
@@ -341,10 +353,12 @@ def cambia_turno ():
     else:
         for e in temp:
             lienzo_turno.delete(e)
-        cruz_1: int = lienzo_turno.create_oval(3, 3, 27, 27, fill="red")
-        temp.append(cruz_1)
-        cruz_2: int = lienzo_turno.create_oval(10, 10, 20, 20, fill="white")
-        temp.append(cruz_2)
+        temp.pop(0)
+        temp.pop(0)
+        circ_1: int = lienzo_turno.create_oval(3, 3, 27, 27, fill="red")
+        temp.append(circ_1)
+        circ_2: int = lienzo_turno.create_oval(10, 10, 20, 20, fill="white")
+        temp.append(circ_2)
 
 def texto_displayer (texto: str):
     texto_d: tk.Label = tk.Label(
@@ -371,6 +385,7 @@ def actualizar_puntuacion (puntaje: List[int]):
     temp_puntuacion.pop(0)
     temp_puntuacion.append(label_puntaje)
     label_puntaje.place(x= 485,y= 5)
+
 
 
 

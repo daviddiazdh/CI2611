@@ -6,6 +6,23 @@ jugador_1: str = "David"
 jugador_2: str = "Pedro"
 N: str = "0"
 contador_error : int = 0
+##Funciones para botones: 
+def cambio_color_1(e):
+    boton_inicio['bg'] = 'black'
+    boton_inicio['fg'] = 'white'
+
+def cambio_color_2(e):
+    boton_inicio['bg'] = 'white'
+    boton_inicio['fg'] = 'black'
+
+def cambio_color_3(e):
+    boton_regresar['bg'] = 'black'
+    boton_regresar['fg'] = 'white'
+
+def cambio_color_4(e):
+    boton_regresar['bg'] = 'white'
+    boton_regresar['fg'] = 'black'
+
 
 ##Fondo
 fondo = tk.PhotoImage(file='images/Fondo.png')
@@ -118,10 +135,28 @@ def regresar():
 ##Botón de inicio
 boton_inicio : tk.Button = tk.Button(creador_raiz.raiz, text='Iniciar', font= ('Arial Black', 10), background="white" ,command= iniciar_juego)
 
+
+boton_inicio.bind(
+    '<Enter>',
+    cambio_color_1
+)
+
+boton_inicio.bind(
+    '<Leave>',
+    cambio_color_2
+)
+
 ##Botón de regresar
 boton_regresar : tk.Button = tk.Button(creador_raiz.raiz, text='Regresar', font= ('Arial Black', 10), background="white", command= regresar)
 
-    
+boton_regresar.bind(
+    '<Enter>',
+    cambio_color_3
+)
 
+boton_regresar.bind(
+    '<Leave>',
+    cambio_color_4
+)
 
 
