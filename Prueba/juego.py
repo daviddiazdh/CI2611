@@ -2,20 +2,15 @@ import tkinter as tk
 from typing import List, Tuple, Callable
 from time import sleep 
 import creador_raiz
-import menu_principal
 import menu_pre_juego
 
-
-
 ##Constantes del programa
-
+##--------------------------------------------------------------------------------------#
 turno: int = 1
 partida : int = 0
-
-
 M : int = 300 #pixeles del tablero
 puntuacion: List[int] = [0,0]
-
+##--------------------------------------------------------------------------------------#
 class Casilla:
     def __init__(self,
                 tablero : tk.Canvas, 
@@ -219,23 +214,13 @@ def eliminar_imagen_juego():
 
     creador_raiz.raiz.quit()
 
+##--------------------------------------------------------------------------------------#
 
 ##Declaración de elementos:
 #--------------------------------------------------------------------------------------#
-
 ##Fondo
-    
-fondo_menu_principal = tk.PhotoImage(file='images/Fondo3.png')
-fondo_etiqueta_menu_principal = tk.Label(creador_raiz.raiz, highlightthickness=0, image=fondo_menu_principal)
-
-##Fondo
-fondo_menu_pj = tk.PhotoImage(file='images/Fondo.png')
-fondo_etiqueta_menu_pj = tk.Label(creador_raiz.raiz, highlightthickness=0, image=fondo_menu_pj)
-
-##Fondo
-fondo_juego = tk.PhotoImage(file='images/Fondo2.png')
-fondo_etiqueta_juego = tk.Label(creador_raiz.raiz, highlightthickness=0, image=fondo_juego)
-
+fondo = tk.PhotoImage(file='images/Fondo2.png')
+fondo_etiqueta = tk.Label(creador_raiz.raiz, highlightthickness=0, image=fondo)
 
 ## Display de Turno
 et_turno = tk.Label(
@@ -310,7 +295,7 @@ boton_regresar.bind(
 
 #--------------------------------------------------------------------------------------#
 
-def iniciar_juego():
+def iniciar():
     ##Seteo de elementos
 
     et_turno.place(x=30, y=5)
@@ -387,46 +372,7 @@ def actualizar_puntuacion (puntaje: List[int]):
     temp_puntuacion.append(label_puntaje)
     label_puntaje.place(x= 485,y= 5)
 
-##Flujo del programa: 
 
-def colocar_fondo(fondo):
-    fondo.place(x=0, y=0)
-
-def eliminar_fondo(fondo_etiqueta):
-    fondo_etiqueta.place_forget()
-
-
-condicion : bool = True
-
-def terminar_while():
-    global condicion
-    condicion = False
-
-while condicion:
-    colocar_fondo(fondo_etiqueta_menu_principal)
-    menu_principal.iniciar_menu_principal()
-
-    creador_raiz.raiz.mainloop()
-
-    if creador_raiz.salir == True:
-        break
-    
-    eliminar_fondo(fondo_etiqueta_menu_principal)
-
-    if creador_raiz.opcion_del_usuario == 1:
-        colocar_fondo(fondo_etiqueta_menu_pj)
-        menu_pre_juego.iniciar_menu_pre_juego()
-        creador_raiz.raiz.mainloop()
-        eliminar_fondo(fondo_etiqueta_menu_pj)
-    if creador_raiz.opcion_del_usuario == 1:
-        colocar_fondo(fondo_etiqueta_juego)
-        iniciar_juego()
-        creador_raiz.raiz.mainloop()
-        eliminar_fondo(fondo_etiqueta_juego)
-
-
-    ##Evento cierre de ventana
-    
 
 
 
