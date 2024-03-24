@@ -2,7 +2,9 @@ import tkinter as tk
 from typing import List, Tuple, Callable
 from time import sleep 
 import creador_raiz
+import menu_principal
 import menu_pre_juego
+
 
 
 ##Constantes del programa
@@ -10,11 +12,9 @@ import menu_pre_juego
 turno: int = 1
 partida : int = 0
 
-N = 3
 
 M : int = 300 #pixeles del tablero
 puntuacion: List[int] = [0,0]
-dimensiones = int(N)
 
 class Casilla:
     def __init__(self,
@@ -22,21 +22,26 @@ class Casilla:
                 posicion : Tuple[int, int],
                 al_cambiar: Callable[[], None]):
         self.tablero = tablero
-        self.lado: int = M/N
+        self.lado: int = M/int(menu_pre_juego.N)
         self.lienzo: tk.Canvas = tablero
         self.esq_superior_izq: Tuple[int, int] = posicion
         self.estado: int = 0 #estado varia entre 0,1 y 2 para indicar vacio, cruz y circunferencia, respectivamente.
         self.al_cambiar = al_cambiar
+        self.casilla = 0
+        self.figura : List[int] = []
         self.dibujar_casilla()
 
     def crear_cruz(self):
         global turno
-        self.tablero.create_line(self.esq_superior_izq[0] + self.lado / 5, self.esq_superior_izq[1] + self.lado / 5, 
+        linea_1 : int = self.tablero.create_line(self.esq_superior_izq[0] + self.lado / 5, self.esq_superior_izq[1] + self.lado / 5, 
                             self.esq_superior_izq[0] + self.lado * (4/5), self.esq_superior_izq[1] + self.lado * (4/5), fill = "black", width = self.lado / 5)
-        self.tablero.create_line(self.esq_superior_izq[0] + self.lado * (4/5), self.esq_superior_izq[1] + self.lado / 5,
+        linea_2 : int= self.tablero.create_line(self.esq_superior_izq[0] + self.lado * (4/5), self.esq_superior_izq[1] + self.lado / 5,
                             self.esq_superior_izq[0] + self.lado / 5, self.esq_superior_izq[1] + self.lado * (4/5), fill = "black", width = self.lado / 5)
         self.estado = 1
         self.tablero.update() 
+
+        self.figura.append(linea_1)
+        self.figura.append(linea_2)
 
         ##Cambia turno en et_turno:
         turno = 2
@@ -44,14 +49,17 @@ class Casilla:
 
         ##Procesa tablero
         self.al_cambiar()
-        
+
     def crear_circulo(self):
         global turno
-        self.tablero.create_oval(self.esq_superior_izq[0] + self.lado / 6, self.esq_superior_izq[1] + self.lado / 6, 
+        circulo_1 : int = self.tablero.create_oval(self.esq_superior_izq[0] + self.lado / 6, self.esq_superior_izq[1] + self.lado / 6, 
                             self.esq_superior_izq[0] + self.lado * (5/6), self.esq_superior_izq[1] + self.lado * (5/6), fill = "red")
-        self.tablero.create_oval(self.esq_superior_izq[0] + self.lado / 6 + self.lado / 5, self.esq_superior_izq[1] + self.lado / 6 + self.lado / 5, 
+        circulo_2 : int = self.tablero.create_oval(self.esq_superior_izq[0] + self.lado / 6 + self.lado / 5, self.esq_superior_izq[1] + self.lado / 6 + self.lado / 5, 
                             self.esq_superior_izq[0] + self.lado * (5/6) - self.lado/5, self.esq_superior_izq[1] + self.lado * (5/6) - self.lado / 5, fill = "white")
         self.estado = 2
+
+        self.figura.append(circulo_1)
+        self.figura.append(circulo_2)
 
         self.tablero.update() 
 
@@ -62,29 +70,33 @@ class Casilla:
         ##Procesa tablero
         self.al_cambiar()
 
+    def eliminar_figura(self):
+        self.tablero.delete(self.figura[0])
+        self.tablero.delete(self.figura[1])
+        self.figura.pop(0)
+        self.figura.pop(0)
+
     def dibujar_casilla(self):
         global turno
-        casilla: int = self.tablero.create_rectangle(self.esq_superior_izq[0], self.esq_superior_izq[1], self.esq_superior_izq[0] + self.lado, self.esq_superior_izq[1] + self.lado, fill="white", outline="black")
+        self.casilla: int = self.tablero.create_rectangle(self.esq_superior_izq[0], self.esq_superior_izq[1], self.esq_superior_izq[0] + self.lado, self.esq_superior_izq[1] + self.lado, fill="white", outline="black")
         nada : int = 0
         self.tablero.tag_bind(
-            casilla,
+            self.casilla,
             "<Button-1>",
             lambda event: ((self.crear_cruz() if (turno == 1) else self.crear_circulo()) if (self.estado == 0) else nada))
 
 class Tablero:
-    def __init__(self, raiz, M, N, al_regresar : Callable):
+    def __init__(self, raiz, M, N):
         self.tablero: tk.Canvas = tk.Canvas(raiz, width = M, height = M, background="black")
         self.tablero.place(x = 150, y = 100)
         self.tablero.update()
         self.N = N
         self.raiz = raiz
         self.lado: int = M
-        self.al_regresar = al_regresar
         self.casillas: List[List[Casilla]] = []
         self.dibujar_tablero()
 
     def dibujar_tablero (self):
-        self.crear_boton_regresar()
         j: int = 0
         while (j < self.N):
             self.casillas.append([])
@@ -93,10 +105,6 @@ class Tablero:
                 self.casillas[j].append(Casilla(self.tablero, (i * (self.lado / self.N), j * (self.lado / self.N)), self.procesar_tablero))
                 i += 1
             j += 1
-
-    def eliminar_tablero (self):
-        self.tablero.place_forget()
-        self.al_regresar()
 
     def procesar_tablero (self):
 
@@ -107,7 +115,6 @@ class Tablero:
                 if (fila[i].estado == 0 or fila[i].estado != fila[i + 1].estado):
                     break
                 elif (fila[i].estado != 0 and fila[i].estado == fila[i + 1].estado and i == len(fila) - 2):
-                    sleep(1)
                     self.ganar_tablero()
                     empate = 0
                 else:
@@ -124,7 +131,6 @@ class Tablero:
                 else:
                     contador = 0
             if (contador == self.N - 1):
-                sleep(1)
                 self.ganar_tablero()
                 empate = 0
             else:
@@ -132,7 +138,6 @@ class Tablero:
         #Verifica diagonal
         
         if (all((self.casillas[i][i].estado != 0 and self.casillas[0][0].estado == self.casillas[i][i].estado) for i in range(self.N))):
-            sleep(1)
             self.ganar_tablero()
             empate = 0
         else:
@@ -141,7 +146,7 @@ class Tablero:
         #Verifica diagonal secundaria
 
         if (all((self.casillas[i][self.N - 1 - i].estado != 0 and self.casillas[0][self.N - 1].estado == self.casillas[i][self.N - 1 - i].estado) for i in range(self.N))):
-            sleep(1)
+            sleep(0.5)
             self.ganar_tablero()
             empate = 0
         else:
@@ -155,7 +160,6 @@ class Tablero:
             partida += 1
             self.reiniciar_tablero()
 
-    
     def ganar_tablero (self):
         global partida
         global turno
@@ -167,6 +171,7 @@ class Tablero:
                 cambia_turno()
             partida += 1
             actualizar_puntuacion(puntuacion)
+            sleep(1)
             self.reiniciar_tablero()
         else:
             texto_displayer(f" > ¡{menu_pre_juego.jugador_2} ha ganado!")
@@ -176,51 +181,42 @@ class Tablero:
                 cambia_turno()
             partida += 1
             actualizar_puntuacion(puntuacion)
+            sleep(1)
             self.reiniciar_tablero()
 
-    
-    def reiniciar_tablero (self):
+    def eliminar_tablero (self):
         self.tablero.place_forget()
-        tablero = Tablero(self.raiz, M, dimensiones, self.al_regresar)
 
-    ##Boton regresar:
-    def crear_boton_regresar(self):
-        def cambio_color_1(evento):
-            self.boton_regresar['bg']= 'black'
-            self.boton_regresar['fg']= 'white'
-
-        def cambio_color_2(evento):
-            self.boton_regresar['bg']= 'white'
-            self.boton_regresar['fg']= 'black'
-
-        self.boton_regresar : tk.Button = tk.Button(self.raiz, text='Regresar', font= ('Arial Black', 10), background="white", foreground="black", command= self.eliminar_tablero)
-        self.boton_regresar.place(x=460, y=400)
-
-        self.boton_regresar.bind(
-            '<Enter>',
-            cambio_color_1
-            )
-
-        self.boton_regresar.bind(
-            '<Leave>',
-            cambio_color_2
-            )
-
+    def reiniciar_tablero (self):
+        for row in self.casillas:
+            for e in row: 
+                if e.estado != 0:
+                    e.estado = 0
+                    e.eliminar_figura()
+        self.tablero.update()
 
 #Funciones para botones#
 ##-------------------------------------------------------------------------------------#
 
-def eliminar_imagen():
-    fondo_etiqueta.place_forget()
+def eliminar_imagen_juego():
     et_turno.place_forget()
     lienzo_turno.delete(cruz_1)
     lienzo_turno.delete(cruz_2)
     lienzo_turno.place_forget()
     lienzo_display.delete(display)
     lienzo_display.place_forget()
+    temp_display[0].place_forget()
+    temp_display.pop(0)
+    temp_puntuacion[0].place_forget()
+    temp_puntuacion.pop(0)
     label_puntuacion.place_forget()
     label_display.place_forget()
     lienzo_cuadro.place_forget()
+    
+    lista_tableros[0].eliminar_tablero()
+    lista_tableros.pop(0)
+    boton_regresar.place_forget()
+
     creador_raiz.raiz.quit()
 
 
@@ -228,8 +224,18 @@ def eliminar_imagen():
 #--------------------------------------------------------------------------------------#
 
 ##Fondo
-fondo_1 = tk.PhotoImage(file='images/Fondo2.png')
-fondo_etiqueta_1 = tk.Label(creador_raiz.raiz, highlightthickness=0, image=fondo_1)
+    
+fondo_menu_principal = tk.PhotoImage(file='images/Fondo3.png')
+fondo_etiqueta_menu_principal = tk.Label(creador_raiz.raiz, highlightthickness=0, image=fondo_menu_principal)
+
+##Fondo
+fondo_menu_pj = tk.PhotoImage(file='images/Fondo.png')
+fondo_etiqueta_menu_pj = tk.Label(creador_raiz.raiz, highlightthickness=0, image=fondo_menu_pj)
+
+##Fondo
+fondo_juego = tk.PhotoImage(file='images/Fondo2.png')
+fondo_etiqueta_juego = tk.Label(creador_raiz.raiz, highlightthickness=0, image=fondo_juego)
+
 
 ## Display de Turno
 et_turno = tk.Label(
@@ -277,12 +283,36 @@ label_puntuacion: tk.Label = tk.Label(
 ##Cuadro negro superior
 lienzo_cuadro: tk.Canvas = tk.Canvas(creador_raiz.raiz, width= 302, height= 20, background='black', highlightthickness=0)
 
+##Lista de tableros
+lista_tableros : List[Tablero] = []
+
+##Boton regresar:
+
+def cambio_color_1(evento):
+    boton_regresar['bg']= 'black'
+    boton_regresar['fg']= 'white'
+
+def cambio_color_2(evento):
+    boton_regresar['bg']= 'white'
+    boton_regresar['fg']= 'black'
+
+boton_regresar : tk.Button = tk.Button(creador_raiz.raiz, text='Regresar', font= ('Arial Black', 10), background="white", foreground="black", command= eliminar_imagen_juego)
+
+boton_regresar.bind(
+    '<Enter>',
+    cambio_color_1
+    )
+
+boton_regresar.bind(
+    '<Leave>',
+    cambio_color_2
+    )
+
 #--------------------------------------------------------------------------------------#
 
-def seteo_elementos():
+def iniciar_juego():
     ##Seteo de elementos
 
-    fondo_etiqueta_1.place(x=0, y=0)
     et_turno.place(x=30, y=5)
     lienzo_turno.place(x=135,y=13)
 
@@ -301,7 +331,7 @@ def seteo_elementos():
 
     ##Display
     display: int = lienzo_display.create_rectangle(0,0,300,45, outline="black", fill='black')
-
+    
     # Display de contador
     label_puntuacion.place(x= 485,y= 5)
     temp_puntuacion.append(label_puntuacion)
@@ -309,7 +339,11 @@ def seteo_elementos():
     ##Cuadro negro superior
     lienzo_cuadro.place(x=150, y=80)
 
-    tablero : Tablero = Tablero(creador_raiz.raiz, M, dimensiones, eliminar_imagen)
+    ##Boton regresar
+    boton_regresar.place(x=460, y=400)
+
+    tablero : Tablero = Tablero(creador_raiz.raiz, M, int(menu_pre_juego.N))
+    lista_tableros.append(tablero)
 
 def cambia_turno ():
     if (turno == 1):
@@ -353,26 +387,48 @@ def actualizar_puntuacion (puntaje: List[int]):
     temp_puntuacion.append(label_puntaje)
     label_puntaje.place(x= 485,y= 5)
 
-
-
 ##Flujo del programa: 
 
-##Prueba imagen
-fondo = tk.PhotoImage(file='images/Fondo.png')
-fondo_etiqueta = tk.Label(creador_raiz.raiz, highlightthickness=0, image=fondo)
-fondo_etiqueta.place(x=0, y=0)
+def colocar_fondo(fondo):
+    fondo.place(x=0, y=0)
 
-
-
-menu_pre_juego.iniciar_menu_pre_juego()
-creador_raiz.raiz.mainloop()
-if creador_raiz.opcion_del_usuario == 1:
+def eliminar_fondo(fondo_etiqueta):
     fondo_etiqueta.place_forget()
-    seteo_elementos()
+
+
+condicion : bool = True
+
+def terminar_while():
+    global condicion
+    condicion = False
+
+while condicion:
+    colocar_fondo(fondo_etiqueta_menu_principal)
+    menu_principal.iniciar_menu_principal()
+
     creador_raiz.raiz.mainloop()
 
-##Ingresa nombres y dimensión
-print("hola")
+    if creador_raiz.salir == True:
+        break
+    
+    eliminar_fondo(fondo_etiqueta_menu_principal)
+
+    if creador_raiz.opcion_del_usuario == 1:
+        colocar_fondo(fondo_etiqueta_menu_pj)
+        menu_pre_juego.iniciar_menu_pre_juego()
+        creador_raiz.raiz.mainloop()
+        eliminar_fondo(fondo_etiqueta_menu_pj)
+    if creador_raiz.opcion_del_usuario == 1:
+        colocar_fondo(fondo_etiqueta_juego)
+        iniciar_juego()
+        creador_raiz.raiz.mainloop()
+        eliminar_fondo(fondo_etiqueta_juego)
+
+
+    ##Evento cierre de ventana
+    
+
+
 
 
     

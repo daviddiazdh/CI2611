@@ -4,7 +4,8 @@ import creador_raiz
 
 jugador_1: str = "David"
 jugador_2: str = "Pedro"
-N: str = ""
+N: str = "0"
+contador_error : int = 0
 
 
 def iniciar_menu_pre_juego():
@@ -31,17 +32,31 @@ def iniciar_menu_pre_juego():
     dimension : tk.Entry = tk.Entry(creador_raiz.raiz, font= ('Arial Black',10), width=28)
     dimension.place(x= 130, y= 300)
 
+    ##Etiqueta Error:
+    lista_errores : List[tk.Label] = [] 
+    etiqueta_error : tk.Label = tk.Label(creador_raiz.raiz, text= "", font= ('Arial Black', 8), background="white", foreground='red')
+    etiqueta_error.place(x=130, y=320)
+    lista_errores.append(etiqueta_error)
+
+    ##Mensaje Error:
+    def mostrar_error(texto):
+        lista_errores[0].place_forget()
+        lista_errores.pop(0)
+        etiqueta_error : tk.Label = tk.Label(creador_raiz.raiz, text= texto, font= ('Arial Black', 8), background="white", foreground='red')
+        etiqueta_error.place(x=130, y=320)
+        lista_errores.append(etiqueta_error)
+
     def iniciar():
         
         global jugador_1
         global jugador_2
         global N
+        global contador_error
         
         jugador_1 = nombre_jugador_1.get()
         jugador_2 = nombre_jugador_2.get()
         N = dimension.get()
 
-        contador : int = 0
         if jugador_1 != jugador_2 and jugador_1 != "" and jugador_2 != "":
             if N != "" and all( i.isdigit() == True for i in N) and int(N) > 2:
                 etiqueta_datos.place_forget()
@@ -53,23 +68,23 @@ def iniciar_menu_pre_juego():
                 dimension.place_forget()
                 boton_inicio.place_forget()
                 boton_regresar.place_forget()
-                if contador == 1:
-                    etiqueta_error.place_forget()
+                if contador_error == 1:
+                    lista_errores[0].place_forget()
+                    lista_errores.pop(0)
                 creador_raiz.opcion_del_usuario = 1
                 creador_raiz.raiz.quit()
 
-
             else: 
-                etiqueta_error : tk.Label = tk.Label(creador_raiz.raiz, text= "La dimensión de su tablero es incorrecta.", font= ('Arial Black', 8), background="white", foreground='red')
-                etiqueta_error.place(x=130, y=320)
-                contador = 1
+                mostrar_error("La dimensión escogida es incorrecta.")
+                contador_error = 1
         else: 
-            ##Etiqueta Error: 
-            etiqueta_error : tk.Label = tk.Label(creador_raiz.raiz, text= "Los nombres no pueden ser iguales.", font= ('Arial Black', 8), background="white", foreground='red')
-            etiqueta_error.place(x=130, y=320)
-            contador = 1
-
+            mostrar_error("No puedes jugar contra ti mismo.")
+            contador_error = 1
+    
     def regresar():
+
+        global contador_error
+        
         etiqueta_datos.place_forget()
         etiqueta_1.place_forget()
         nombre_jugador_1.place_forget()
@@ -79,6 +94,10 @@ def iniciar_menu_pre_juego():
         dimension.place_forget()
         boton_inicio.place_forget()
         boton_regresar.place_forget()
+        if contador_error == 1:
+            lista_errores[0].place_forget()
+            lista_errores.pop(0)
+
         creador_raiz.opcion_del_usuario = 2
         creador_raiz.raiz.quit()
 

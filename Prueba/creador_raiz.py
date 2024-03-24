@@ -2,6 +2,7 @@ from typing import List, Tuple, Union
 import tkinter as tk
 
 opcion_del_usuario : int = 0
+salir : bool = False
 
 raiz = tk.Tk()
 ##Declaración de la ventana:
