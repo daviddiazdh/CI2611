@@ -1,35 +1,41 @@
-from typing import List, Tuple, Union
-import tkinter as tk
+import creador_raiz
 import menu_principal
 import menu_pre_juego
 import juego
 
-##Declaración de la ventana:
-##-------------------------------------------------------------##
-raiz = tk.Tk()
-alto_pantalla = raiz.winfo_screenheight()
-ancho_pantalla = raiz.winfo_screenwidth()
+def colocar_fondo(fondo):
+    fondo.place(x=0, y=0)
 
-alto_ventana = 500
-ancho_ventana = 600
+def eliminar_fondo(fondo_etiqueta):
+    fondo_etiqueta.place_forget()
 
-posicion_x= round((ancho_pantalla - ancho_ventana)/2)
-posicion_y = round((alto_pantalla - alto_ventana)/2)
+try:
+    while True:
+        colocar_fondo(menu_principal.fondo_etiqueta)
+        menu_principal.iniciar()
+        creador_raiz.raiz.mainloop()
 
-posicionraiz = str(ancho_ventana)+"x"+str(alto_ventana)+"+"+str(posicion_x)+"+"+str(posicion_y - 25)
-raiz.geometry(posicionraiz)
-raiz.resizable(0, 0)
-raiz['bg'] = 'white'
+        if creador_raiz.salir == True:
+            break
+        
+        eliminar_fondo(menu_principal.fondo_etiqueta)
 
-raiz.wm_iconbitmap('images/tres-en-raya1.ico')
+        if creador_raiz.opcion_del_usuario == 1:
+            colocar_fondo(menu_pre_juego.fondo_etiqueta)
+            
+            menu_pre_juego.iniciar()
 
-raiz.wm_title('N en Raya 3D')
-##-----------------------------------------------------------##
+            creador_raiz.raiz.mainloop()
 
-menu_principal.menu_principal(raiz)
+            eliminar_fondo(menu_pre_juego.fondo_etiqueta)
 
+        if creador_raiz.opcion_del_usuario == 1:
+            colocar_fondo(juego.fondo_etiqueta)
 
-raiz.mainloop()
+            juego.iniciar()
 
+            creador_raiz.raiz.mainloop()
 
-
+            eliminar_fondo(juego.fondo_etiqueta)
+except:
+    pass
