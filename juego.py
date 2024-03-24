@@ -48,7 +48,7 @@ class Casilla:
     def crear_circulo(self):
         global turno
         circulo_1 : int = self.tablero.create_oval(self.esq_superior_izq[0] + self.lado / 6, self.esq_superior_izq[1] + self.lado / 6, 
-                            self.esq_superior_izq[0] + self.lado * (5/6), self.esq_superior_izq[1] + self.lado * (5/6), fill = "red")
+                            self.esq_superior_izq[0] + self.lado * (5/6), self.esq_superior_izq[1] + self.lado * (5/6), fill = "maroon2")
         circulo_2 : int = self.tablero.create_oval(self.esq_superior_izq[0] + self.lado / 6 + self.lado / 5, self.esq_superior_izq[1] + self.lado / 6 + self.lado / 5, 
                             self.esq_superior_izq[0] + self.lado * (5/6) - self.lado/5, self.esq_superior_izq[1] + self.lado * (5/6) - self.lado / 5, fill = "white")
         self.estado = 2
@@ -270,8 +270,9 @@ temp_puntuacion: List[tk.Label] = []
 label_puntuacion: tk.Label = tk.Label(
     creador_raiz.raiz,
     text= "0  -  0",
-    font=("Arial Black", 20),
-    background='white',
+    font=("Arial Black", 15),
+    background='black',
+    foreground="white",
     highlightthickness=0
 )
 
@@ -283,14 +284,14 @@ lista_tableros : List[Tablero] = []
 
 
 def cambio_color_1(evento):
+    boton_regresar['bg']= 'magenta3'
+    boton_regresar['fg']= 'black'
+
+def cambio_color_2(evento):
     boton_regresar['bg']= 'black'
     boton_regresar['fg']= 'white'
 
-def cambio_color_2(evento):
-    boton_regresar['bg']= 'white'
-    boton_regresar['fg']= 'black'
-
-boton_regresar : tk.Button = tk.Button(creador_raiz.raiz, text='Regresar', font= ('Arial Black', 10), background="white", foreground="black", command= eliminar_imagen_juego)
+boton_regresar : tk.Button = tk.Button(creador_raiz.raiz, text='Regresar', font= ('Arial Black', 10), background="black", foreground="white", command= eliminar_imagen_juego)
 
 boton_regresar.bind(
     '<Enter>',
@@ -327,7 +328,7 @@ def iniciar():
     display: int = lienzo_display.create_rectangle(0,0,300,45, outline="black", fill='black')
     
     # Display de contador
-    label_puntuacion.place(x= 485,y= 5)
+    label_puntuacion.place(x= 483,y= 22)
     temp_puntuacion.append(label_puntuacion)
 
     ##Cuadro negro superior
@@ -355,7 +356,7 @@ def cambia_turno ():
             lienzo_turno.delete(e)
         temp.pop(0)
         temp.pop(0)
-        circ_1: int = lienzo_turno.create_oval(3, 3, 27, 27, fill="red")
+        circ_1: int = lienzo_turno.create_oval(3, 3, 27, 27, fill="magenta3")
         temp.append(circ_1)
         circ_2: int = lienzo_turno.create_oval(10, 10, 20, 20, fill="white")
         temp.append(circ_2)
@@ -377,14 +378,15 @@ def actualizar_puntuacion (puntaje: List[int]):
     label_puntaje: tk.Label = tk.Label(
         creador_raiz.raiz,
         text= f"{puntaje[0]}  -  {puntaje[1]}",
-        font= ("Arial Black", 20),
-        background='white',
+        font= ("Arial Black", 15),
+        background='black',
+        foreground="white",
         highlightthickness=0
     )
     temp_puntuacion[0].place_forget()
     temp_puntuacion.pop(0)
     temp_puntuacion.append(label_puntaje)
-    label_puntaje.place(x= 485,y= 5)
+    label_puntaje.place(x= 483,y= 22)
 
 
 

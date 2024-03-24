@@ -8,20 +8,20 @@ N: str = "0"
 contador_error : int = 0
 ##Funciones para botones: 
 def cambio_color_1(e):
+    boton_inicio['bg'] = 'magenta3'
+    boton_inicio['fg'] = 'black'
+
+def cambio_color_2(e):
     boton_inicio['bg'] = 'black'
     boton_inicio['fg'] = 'white'
 
-def cambio_color_2(e):
-    boton_inicio['bg'] = 'white'
-    boton_inicio['fg'] = 'black'
-
 def cambio_color_3(e):
-    boton_regresar['bg'] = 'black'
-    boton_regresar['fg'] = 'white'
+    boton_regresar['bg'] = 'magenta3'
+    boton_regresar['fg'] = 'black'
 
 def cambio_color_4(e):
-    boton_regresar['bg'] = 'white'
-    boton_regresar['fg'] = 'black'
+    boton_regresar['bg'] = 'black'
+    boton_regresar['fg'] = 'white'
 
 
 ##Fondo
@@ -33,17 +33,17 @@ etiqueta_datos : tk.Label = tk.Label(creador_raiz.raiz, text='Datos de juego:', 
 
 ##Entrada 1 Usuario:
 etiqueta_1 : tk.Label = tk.Label(creador_raiz.raiz, text='Ingrese el nombre del jugador 1:', font= ('Arial Black', 10), background="white")
-nombre_jugador_1 : tk.Entry = tk.Entry(creador_raiz.raiz, font= ('Arial Black',10), width=28)
+nombre_jugador_1 : tk.Entry = tk.Entry(creador_raiz.raiz, font= ('Arial Black',10), foreground='magenta3',  width=28)
 
 ##Entrada 1 Usuario:
 etiqueta_2 : tk.Label = tk.Label(creador_raiz.raiz, text='Ingrese el nombre del jugador 2:', font= ('Arial Black', 10), background="white")
 
-nombre_jugador_2 : tk.Entry = tk.Entry(creador_raiz.raiz, font= ('Arial Black',10), width=28)
+nombre_jugador_2 : tk.Entry = tk.Entry(creador_raiz.raiz, font= ('Arial Black',10), foreground='magenta3', width=28)
 
 ##Entrada 3 Usuario:
 etiqueta_3 : tk.Label = tk.Label(creador_raiz.raiz, text='Ingrese la dimensión del tablero:', font= ('Arial Black', 10), background="white")
 
-dimension : tk.Entry = tk.Entry(creador_raiz.raiz, font= ('Arial Black',10), width=28)
+dimension : tk.Entry = tk.Entry(creador_raiz.raiz, foreground='magenta3', font= ('Arial Black',10), width=28)
 
 ##Etiqueta Error:
 lista_errores : List[tk.Label] = [] 
@@ -133,7 +133,7 @@ def regresar():
         creador_raiz.raiz.quit()
 
 ##Botón de inicio
-boton_inicio : tk.Button = tk.Button(creador_raiz.raiz, text='Iniciar', font= ('Arial Black', 10), background="white" ,command= iniciar_juego)
+boton_inicio : tk.Button = tk.Button(creador_raiz.raiz, text='Iniciar', font= ('Arial Black', 10), background="black", foreground="white" ,command= iniciar_juego)
 
 
 boton_inicio.bind(
@@ -147,7 +147,7 @@ boton_inicio.bind(
 )
 
 ##Botón de regresar
-boton_regresar : tk.Button = tk.Button(creador_raiz.raiz, text='Regresar', font= ('Arial Black', 10), background="white", command= regresar)
+boton_regresar : tk.Button = tk.Button(creador_raiz.raiz, text='Regresar', font= ('Arial Black', 10), background="black", foreground="white", command= regresar)
 
 boton_regresar.bind(
     '<Enter>',
