@@ -2,24 +2,64 @@ import tkinter as tk
 from typing import List
 import creador_raiz
 
-jugador_1: str = "David"
-jugador_2: str = "Pedro"
+jugador_1: str = ""
+jugador_2: str = ""
 N: str = "0"
 contador_error : int = 0
 ##Funciones para botones: 
-def cambio_color_1(e):
+def cambio_color_1(e) -> None:
+    """
+    Cambia de color el botón inicio.
+    Pasa el color a magenta en el fondo y negro a las letras.
+
+    ### Parámetros:
+    * `evento`: Nombre de referencia para que tkinter identifique el evento.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """
     boton_inicio['bg'] = 'magenta3'
     boton_inicio['fg'] = 'black'
 
-def cambio_color_2(e):
+def cambio_color_2(e) -> None:
+    """
+    Cambia de color el botón inicio.
+    Pasa el color a negro en el fondo y blanco a las letras.
+
+    ### Parámetros:
+    * `evento`: Nombre de referencia para que tkinter identifique el evento.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """
     boton_inicio['bg'] = 'black'
     boton_inicio['fg'] = 'white'
 
-def cambio_color_3(e):
+def cambio_color_3(e) -> None:
+    """
+    Cambia de color el botón regresar.
+    Pasa el color a magenta en el fondo y negro a las letras.
+
+    ### Parámetros:
+    * `evento`: Nombre de referencia para que tkinter identifique el evento.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """
     boton_regresar['bg'] = 'magenta3'
     boton_regresar['fg'] = 'black'
 
-def cambio_color_4(e):
+def cambio_color_4(e) -> None:
+    """
+    Cambia de color el botón regresar.
+    Pasa el color a negro en el fondo y blanco a las letras.
+
+    ### Parámetros:
+    * `evento`: Nombre de referencia para que tkinter identifique el evento.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """
     boton_regresar['bg'] = 'black'
     boton_regresar['fg'] = 'white'
 
@@ -50,8 +90,16 @@ lista_errores : List[tk.Label] = []
 etiqueta_error : tk.Label = tk.Label(creador_raiz.raiz, text= "", font= ('Arial Black', 8), background="white", foreground='magenta3')
 
 
-def iniciar():
-    
+def iniciar() -> None:
+    """
+    Coloca todos los elementos que se mostrarán en pantalla. 
+
+    ### Parámetros:
+    * No recibe parámetros.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """   
     etiqueta_datos.place(x=130, y=100)
 
     etiqueta_1.place(x=130, y=170)
@@ -70,15 +118,32 @@ def iniciar():
     boton_regresar.place(x=140, y=350)
 
 ##Mensaje Error:
-def mostrar_error(texto):
+def mostrar_error(texto) -> None:
+    """
+    Muestra un mensaje de error en la interfaz.
+
+    ### Parámetros:
+    * `texto`: Texto que se quiere mostrar como error.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """  
     lista_errores[0].place_forget()
     lista_errores.pop(0)
     etiqueta_error : tk.Label = tk.Label(creador_raiz.raiz, text= texto, font= ('Arial Black', 8), background="white", foreground='magenta3')
     etiqueta_error.place(x=130, y=320)
     lista_errores.append(etiqueta_error)
 
-def iniciar_juego():
-    
+def iniciar_juego() -> None:
+    """
+    Se prepara para entrar en el módulo juego, borrando todo lo que se muestra en pantalla.
+
+    ### Parámetros:
+    * No recibe parámetros.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """ 
     global jugador_1
     global jugador_2
     global N
@@ -112,29 +177,36 @@ def iniciar_juego():
         mostrar_error("No puedes jugar contra ti mismo.")
         contador_error = 1
 
-def regresar():
+def regresar() -> None:
+    """
+    Se prepara para entrar en el módulo menu principal, borrando todo lo que se muestra en pantalla.
 
-        global contador_error
-        
-        etiqueta_datos.place_forget()
-        etiqueta_1.place_forget()
-        nombre_jugador_1.place_forget()
-        etiqueta_2.place_forget()
-        nombre_jugador_2.place_forget()
-        etiqueta_3.place_forget()
-        dimension.place_forget()
-        boton_inicio.place_forget()
-        boton_regresar.place_forget()
-        if contador_error == 1:
-            lista_errores[0].place_forget()
-            lista_errores.pop(0)
+    ### Parámetros:
+    * No recibe parámetros.
 
-        creador_raiz.opcion_del_usuario = 2
-        creador_raiz.raiz.quit()
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """ 
+    global contador_error
+    
+    etiqueta_datos.place_forget()
+    etiqueta_1.place_forget()
+    nombre_jugador_1.place_forget()
+    etiqueta_2.place_forget()
+    nombre_jugador_2.place_forget()
+    etiqueta_3.place_forget()
+    dimension.place_forget()
+    boton_inicio.place_forget()
+    boton_regresar.place_forget()
+    if contador_error == 1:
+        lista_errores[0].place_forget()
+        lista_errores.pop(0)
+
+    creador_raiz.opcion_del_usuario = 2
+    creador_raiz.raiz.quit()
 
 ##Botón de inicio
 boton_inicio : tk.Button = tk.Button(creador_raiz.raiz, text='Iniciar', font= ('Arial Black', 10), background="black", foreground="white" ,command= iniciar_juego)
-
 
 boton_inicio.bind(
     '<Enter>',

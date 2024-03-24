@@ -82,16 +82,36 @@ class Casilla:
 
 class Tablero:
     def __init__(self, raiz, M, N):
+        """
+        Define los atributos iniciales del tablero.
+
+        ### Parámetros:
+        * `raiz`: La ventana donde se coloca el tablero.
+        * `M`: Las dimensión en píxeles del tablero.
+        * `N`: Dimensión del tablero en casillas.
+
+        ### Retorno: 
+        * `None`: No devuelve nada.
+        """
         self.tablero: tk.Canvas = tk.Canvas(raiz, width = M, height = M, background="black")
         self.tablero.place(x = 150, y = 100)
         self.tablero.update()
-        self.N = N
-        self.raiz = raiz
+        self.N : int = N
+        self.raiz : tk.Tk = raiz
         self.lado: int = M
         self.casillas: List[List[Casilla]] = []
         self.dibujar_tablero()
 
     def dibujar_tablero (self):
+        """
+        Dibuja el tablero en la raíz.
+
+        ### Parámetros:
+        * `self`: Referencia a sí mismo.
+
+        ### Retorno: 
+        * `None`: No devuelve nada.
+        """
         j: int = 0
         while (j < self.N):
             self.casillas.append([])
@@ -102,7 +122,16 @@ class Tablero:
             j += 1
     
     def procesar_tablero (self):
+        """
+        Procesa el tablero. 
+        Básicamente revisa si el tablero tiene una figura ganadora de fila, columna o diagonal.
 
+        ### Parámetros:
+        * `self`: Referencia a sí mismo.
+
+        ### Retorno: 
+        * `None`: No devuelve nada.
+        """
         empate : int = 1
         for j, fila in enumerate(self.casillas):
             for i in range(len(fila) - 1):
@@ -157,6 +186,16 @@ class Tablero:
             self.reiniciar_tablero()
 
     def ganar_tablero (self):
+        """
+        Se llama cuando se encuentra una figura ganadora en el tablero. 
+        Esta función básicamente muestra un mensaje en un displayer y luego llama a otra función que reinicia el tablero.
+        
+        ### Parámetros:
+        * `self`: Referencia a sí mismo.
+
+        ### Retorno: 
+        * `None`: No devuelve nada.
+        """
         global partida
         global turno
         if (turno == 2): #El ganador fue el jugador 1
@@ -181,9 +220,27 @@ class Tablero:
             self.reiniciar_tablero()
 
     def eliminar_tablero (self):
+        """
+        Olvida el tablero.
+
+        ### Parámetros:
+        * `self`: Referencia a sí mismo.
+
+        ### Retorno: 
+        * `None`: No devuelve nada.
+        """
         self.tablero.place_forget()
 
     def reiniciar_tablero (self):
+        """
+        Blanquea cada casilla del tablero para empezar otra partida.
+
+        ### Parámetros:
+        * `self`: Referencia a sí mismo.
+
+        ### Retorno: 
+        * `None`: No devuelve nada.
+        """
         for row in self.casillas:
             for e in row: 
                 if e.estado != 0:
@@ -194,7 +251,16 @@ class Tablero:
 #Funciones para botones#
 ##-------------------------------------------------------------------------------------#
 
-def eliminar_imagen_juego():
+def eliminar_imagen_juego() -> None:
+    """
+    Elimina todos los objetos que se muestran en pantalla.
+
+    ### Parámetros:
+    * No recibe ningún parámetro.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """
     et_turno.place_forget()
     lienzo_turno.delete(cruz_1)
     lienzo_turno.delete(cruz_2)
@@ -281,12 +347,31 @@ lienzo_cuadro: tk.Canvas = tk.Canvas(creador_raiz.raiz, width= 302, height= 20, 
 ##Lista de tableros
 lista_tableros : List[Tablero] = []
 
+def cambio_color_1(evento) -> None:
+    """
+    Cambia de color el botón regresar.
+    Pasa el color a magenta en el fondo y negro a las letras.
 
-def cambio_color_1(evento):
+    ### Parámetros:
+    * `evento`: Nombre de referencia para que tkinter identifique el evento.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """
     boton_regresar['bg']= 'magenta3'
     boton_regresar['fg']= 'black'
 
 def cambio_color_2(evento):
+    """
+    Cambia de color el botón regresar.
+    Pasa el color a negro en el fondo y blanco a las letras.
+
+    ### Parámetros:
+    * `evento`: Nombre de referencia para que tkinter identifique el evento.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """
     boton_regresar['bg']= 'black'
     boton_regresar['fg']= 'white'
 
@@ -304,7 +389,17 @@ boton_regresar.bind(
 
 #--------------------------------------------------------------------------------------#
 
-def iniciar():
+def iniciar() -> None:
+    """
+    Coloca todos los elementos que se mostrarán en pantalla. 
+    Además, hace la primera y única llamada al tablero que hay en todo el código.
+
+    ### Parámetros:
+    * No recibe parámetros.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """
     ##Seteo de elementos
 
     et_turno.place(x=30, y=5)
@@ -340,7 +435,16 @@ def iniciar():
     tablero : Tablero = Tablero(creador_raiz.raiz, M, int(menu_pre_juego.N))
     lista_tableros.append(tablero)
 
-def cambia_turno ():
+def cambia_turno () -> None:
+    """
+    Hace el cambio de turno en pantalla, cambiando una cruz por un círculo o al revés.
+
+    ### Parámetros:
+    * No recibe parámetros.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """
     if (turno == 1):
         for e in temp:
             lienzo_turno.delete(e)
@@ -360,7 +464,16 @@ def cambia_turno ():
         circ_2: int = lienzo_turno.create_oval(10, 10, 20, 20, fill="white")
         temp.append(circ_2)
 
-def texto_displayer (texto: str):
+def texto_displayer (texto: str) -> None:
+    """
+    Muestra un mensaje en el displayer que está debajo del tablero.
+
+    ### Parámetros:
+    * `texto`: Texto que se va a mostrar en el displayer.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """
     texto_d: tk.Label = tk.Label(
         creador_raiz.raiz,
         text= texto,
@@ -373,7 +486,16 @@ def texto_displayer (texto: str):
     temp_display.append(texto_d)
     texto_d.place(x=155, y=432)
 
-def actualizar_puntuacion (puntaje: List[int]):
+def actualizar_puntuacion (puntaje: List[int]) -> None:
+    """
+    Actualiza la puntuación en la parte superior derecha de la pantalla.
+
+    ### Parámetros:
+    * `puntaje`: Recibe la lista que contiene el puntaje actual.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """
     label_puntaje: tk.Label = tk.Label(
         creador_raiz.raiz,
         text= f"{puntaje[0]}  -  {puntaje[1]}",

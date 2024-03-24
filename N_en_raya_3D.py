@@ -1,12 +1,29 @@
+import tkinter as tk
 import creador_raiz
 import menu_principal
 import menu_pre_juego
 import juego
 
-def colocar_fondo(fondo):
-    fondo.place(x=0, y=0)
+def colocar_fondo(fondo_etiqueta : tk.Label) -> None:
+    """
+    Coloca un fondo dado como fondo de la ventana.
+    ### Parámetros:
+       * `fondo etiqueta`: El label con imagen a colocar en el fondo. 
 
-def eliminar_fondo(fondo_etiqueta):
+    ### Retorno: 
+       * `None`: No devuelve nada.
+    """
+    fondo_etiqueta.place(x=0, y=0)
+
+def eliminar_fondo(fondo_etiqueta : tk.Label):
+    """
+    Elimina un fondo dado.
+    ### Parámetros:
+       * `fondo etiqueta`: El label con imagen a eliminar en el fondo. 
+
+    ### Retorno: 
+       * `None`: No devuelve nada.
+    """
     fondo_etiqueta.place_forget()
 
 try:
