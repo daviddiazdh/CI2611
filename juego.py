@@ -271,14 +271,11 @@ def eliminar_imagen_juego() -> None:
     lienzo_turno.place_forget()
     lienzo_display.delete(display)
     lienzo_display.place_forget()
-    temp_display[0].place_forget()
-    temp_display.pop(0)
-    temp_puntuacion[0].place_forget()
-    temp_puntuacion.pop(0)
+    texto_puntuacion_SV.set("0  -  0")
     label_puntuacion.place_forget()
     label_display.place_forget()
     lienzo_cuadro.place_forget()
-    
+    texto_display_SV.set(" > ")
     lista_tableros[0].eliminar_tablero()
     lista_tableros.pop(0)
     boton_regresar.place_forget()
@@ -316,12 +313,14 @@ cruz_2 : int = 0
 
 ## Display de mensajes
 lienzo_display: tk.Canvas = tk.Canvas(creador_raiz.raiz, width= 300, height= 45)
-temp_display: List[int] = []
 
-#text_displayer cero
+#text_displayer
+texto_display_SV : tk.StringVar = tk.StringVar()
+texto_display_SV.set(" > ")
+
 label_display: tk.Label = tk.Label(
     creador_raiz.raiz,
-    text= " > ",
+    textvariable= texto_display_SV,
     font= ('Arial Black', 10),
     fg='white',
     background='black'
@@ -331,10 +330,11 @@ label_display: tk.Label = tk.Label(
 display : int = 0
 
 # Display de contador
-temp_puntuacion: List[tk.Label] = []
+texto_puntuacion_SV : tk.StringVar = tk.StringVar()
+texto_puntuacion_SV.set("0  -  0")
 label_puntuacion: tk.Label = tk.Label(
     creador_raiz.raiz,
-    text= "0  -  0",
+    textvariable= texto_puntuacion_SV,
     font=("Arial Black", 15),
     background='black',
     foreground="white",
@@ -361,7 +361,7 @@ def cambio_color_1(evento) -> None:
     boton_regresar['bg']= 'magenta3'
     boton_regresar['fg']= 'black'
 
-def cambio_color_2(evento):
+def cambio_color_2(evento) -> None:
     """
     Cambia de color el botón regresar.
     Pasa el color a negro en el fondo y blanco a las letras.
@@ -416,14 +416,12 @@ def iniciar() -> None:
 
     #text_displayer cero
     label_display.place(x=155, y=432)
-    temp_display.append(label_display)
 
     ##Display
     display: int = lienzo_display.create_rectangle(0,0,300,45, outline="black", fill='black')
     
     # Display de contador
     label_puntuacion.place(x= 483,y= 22)
-    temp_puntuacion.append(label_puntuacion)
 
     ##Cuadro negro superior
     lienzo_cuadro.place(x=150, y=80)
@@ -435,7 +433,7 @@ def iniciar() -> None:
     tablero : Tablero = Tablero(creador_raiz.raiz, M, int(menu_pre_juego.N))
     lista_tableros.append(tablero)
 
-def cambia_turno () -> None:
+def cambia_turno() -> None:
     """
     Hace el cambio de turno en pantalla, cambiando una cruz por un círculo o al revés.
 
@@ -464,7 +462,7 @@ def cambia_turno () -> None:
         circ_2: int = lienzo_turno.create_oval(10, 10, 20, 20, fill="white")
         temp.append(circ_2)
 
-def texto_displayer (texto: str) -> None:
+def texto_displayer(texto: str) -> None:
     """
     Muestra un mensaje en el displayer que está debajo del tablero.
 
@@ -474,19 +472,9 @@ def texto_displayer (texto: str) -> None:
     ### Retorno: 
     * `None`: No devuelve nada.
     """
-    texto_d: tk.Label = tk.Label(
-        creador_raiz.raiz,
-        text= texto,
-        font=("Arial Black", 10),
-        fg='white',
-        background='black'
-    )
-    temp_display[0].place_forget()
-    temp_display.pop(0)
-    temp_display.append(texto_d)
-    texto_d.place(x=155, y=432)
+    texto_display_SV.set(texto)
 
-def actualizar_puntuacion (puntaje: List[int]) -> None:
+def actualizar_puntuacion(puntaje: List[int]) -> None:
     """
     Actualiza la puntuación en la parte superior derecha de la pantalla.
 
@@ -496,18 +484,8 @@ def actualizar_puntuacion (puntaje: List[int]) -> None:
     ### Retorno: 
     * `None`: No devuelve nada.
     """
-    label_puntaje: tk.Label = tk.Label(
-        creador_raiz.raiz,
-        text= f"{puntaje[0]}  -  {puntaje[1]}",
-        font= ("Arial Black", 15),
-        background='black',
-        foreground="white",
-        highlightthickness=0
-    )
-    temp_puntuacion[0].place_forget()
-    temp_puntuacion.pop(0)
-    temp_puntuacion.append(label_puntaje)
-    label_puntaje.place(x= 483,y= 22)
+    texto = f"{puntaje[0]}  -  {puntaje[1]}"
+    texto_puntuacion_SV.set(texto)
 
 
 

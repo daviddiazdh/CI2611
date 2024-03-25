@@ -5,7 +5,6 @@ import creador_raiz
 jugador_1: str = ""
 jugador_2: str = ""
 N: str = "0"
-contador_error : int = 0
 ##Funciones para botones: 
 def cambio_color_1(e) -> None:
     """
@@ -86,9 +85,8 @@ etiqueta_3 : tk.Label = tk.Label(creador_raiz.raiz, text='Ingrese la dimensión 
 dimension : tk.Entry = tk.Entry(creador_raiz.raiz, foreground='magenta3', font= ('Arial Black',10), width=28)
 
 ##Etiqueta Error:
-lista_errores : List[tk.Label] = [] 
-etiqueta_error : tk.Label = tk.Label(creador_raiz.raiz, text= "", font= ('Arial Black', 8), background="white", foreground='magenta3')
-
+texto_SV : tk.StringVar = tk.StringVar() 
+etiqueta_error : tk.Label = tk.Label(creador_raiz.raiz, textvariable= texto_SV, font= ('Arial Black', 8), background="white", foreground='magenta3')
 
 def iniciar() -> None:
     """
@@ -112,7 +110,6 @@ def iniciar() -> None:
     dimension.place(x= 130, y= 300)
 
     etiqueta_error.place(x=130, y=320)
-    lista_errores.append(etiqueta_error)
 
     boton_inicio.place(x=300, y=350)
     boton_regresar.place(x=140, y=350)
@@ -128,11 +125,7 @@ def mostrar_error(texto) -> None:
     ### Retorno: 
     * `None`: No devuelve nada.
     """  
-    lista_errores[0].place_forget()
-    lista_errores.pop(0)
-    etiqueta_error : tk.Label = tk.Label(creador_raiz.raiz, text= texto, font= ('Arial Black', 8), background="white", foreground='magenta3')
-    etiqueta_error.place(x=130, y=320)
-    lista_errores.append(etiqueta_error)
+    texto_SV.set(texto)
 
 def iniciar_juego() -> None:
     """
@@ -147,7 +140,6 @@ def iniciar_juego() -> None:
     global jugador_1
     global jugador_2
     global N
-    global contador_error
     
     jugador_1 = nombre_jugador_1.get()
     jugador_2 = nombre_jugador_2.get()
@@ -164,18 +156,13 @@ def iniciar_juego() -> None:
             dimension.place_forget()
             boton_inicio.place_forget()
             boton_regresar.place_forget()
-            if contador_error == 1:
-                lista_errores[0].place_forget()
-                lista_errores.pop(0)
             creador_raiz.opcion_del_usuario = 1
             creador_raiz.raiz.quit()
 
         else: 
             mostrar_error("La dimensión escogida es incorrecta.")
-            contador_error = 1
     else: 
         mostrar_error("No puedes jugar contra ti mismo.")
-        contador_error = 1
 
 def regresar() -> None:
     """
@@ -187,8 +174,6 @@ def regresar() -> None:
     ### Retorno: 
     * `None`: No devuelve nada.
     """ 
-    global contador_error
-    
     etiqueta_datos.place_forget()
     etiqueta_1.place_forget()
     nombre_jugador_1.place_forget()
@@ -198,10 +183,7 @@ def regresar() -> None:
     dimension.place_forget()
     boton_inicio.place_forget()
     boton_regresar.place_forget()
-    if contador_error == 1:
-        lista_errores[0].place_forget()
-        lista_errores.pop(0)
-
+    etiqueta_error.place_forget()
     creador_raiz.opcion_del_usuario = 2
     creador_raiz.raiz.quit()
 

@@ -15,7 +15,7 @@ def colocar_fondo(fondo_etiqueta : tk.Label) -> None:
     """
     fondo_etiqueta.place(x=0, y=0)
 
-def eliminar_fondo(fondo_etiqueta : tk.Label):
+def eliminar_fondo(fondo_etiqueta : tk.Label) -> None:
     """
     Elimina un fondo dado.
     ### Parámetros:
