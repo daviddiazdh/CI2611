@@ -36,10 +36,36 @@ class Casilla:
         linea_2 : int= self.tablero.create_line(self.esq_superior_izq[0] + self.lado * (4/5), self.esq_superior_izq[1] + self.lado / 5,
                             self.esq_superior_izq[0] + self.lado / 5, self.esq_superior_izq[1] + self.lado * (4/5), fill = "black", width = self.lado / 5)
         self.estado = 1
+        
+        self.tablero.tag_bind(
+            linea_1,
+            "<Enter>",
+            lambda e : self.al_tocar()
+            )
+        
+        self.tablero.tag_bind(
+            linea_2,
+            "<Enter>",
+            lambda e : self.al_tocar()
+            )
+
+        self.tablero.tag_bind(
+            linea_1,
+            "<Leave>",
+            lambda e : self.al_dejar_tocar()
+            )
+
+        self.tablero.tag_bind(
+            linea_2,
+            "<Leave>",
+            lambda e : self.al_dejar_tocar()
+            )
+        
         self.tablero.update() 
 
         self.figura.append(linea_1)
         self.figura.append(linea_2)
+
 
         ##Cambia turno en et_turno:
         turno = 2
@@ -56,6 +82,30 @@ class Casilla:
                             self.esq_superior_izq[0] + self.lado * (5/6) - self.lado/5, self.esq_superior_izq[1] + self.lado * (5/6) - self.lado / 5, fill = "white")
         self.estado = 2
 
+        self.tablero.tag_bind(
+            circulo_1,
+            "<Enter>",
+            lambda e : self.al_tocar()
+            )
+        
+        self.tablero.tag_bind(
+            circulo_2,
+            "<Enter>",
+            lambda e : self.al_tocar()
+            )
+        
+        self.tablero.tag_bind(
+            circulo_1,
+            "<Leave>",
+            lambda e : self.al_dejar_tocar()
+            )
+        
+        self.tablero.tag_bind(
+            circulo_2,
+            "<Leave>",
+            lambda e : self.al_dejar_tocar()
+            )
+        
         self.figura.append(circulo_1)
         self.figura.append(circulo_2)
 
@@ -82,7 +132,7 @@ class Casilla:
             self.casilla,
             "<Button-1>",
             lambda event: ((self.crear_cruz() if (turno == 1) else self.crear_circulo()) if (self.estado == 0) else nada))
-        
+
         self.tablero.tag_bind(
             self.casilla,
             "<Enter>",
