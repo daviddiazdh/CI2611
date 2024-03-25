@@ -145,24 +145,27 @@ def iniciar_juego() -> None:
     jugador_2 = nombre_jugador_2.get()
     N = dimension.get()
 
-    if jugador_1 != jugador_2 and jugador_1 != "" and jugador_2 != "":
-        if N != "" and all( i.isdigit() == True for i in N) and int(N) > 2:
-            etiqueta_datos.place_forget()
-            etiqueta_1.place_forget()
-            nombre_jugador_1.place_forget()
-            etiqueta_2.place_forget()
-            nombre_jugador_2.place_forget()
-            etiqueta_3.place_forget()
-            dimension.place_forget()
-            boton_inicio.place_forget()
-            boton_regresar.place_forget()
-            creador_raiz.opcion_del_usuario = 1
-            creador_raiz.raiz.quit()
-
+    if jugador_1 != "" and jugador_2 != "" and N != "":
+        if jugador_1 != jugador_2:
+            if N != "" and all( i.isdigit() == True for i in N) and int(N) > 2:
+                etiqueta_datos.place_forget()
+                etiqueta_1.place_forget()
+                nombre_jugador_1.place_forget()
+                etiqueta_2.place_forget()
+                nombre_jugador_2.place_forget()
+                etiqueta_3.place_forget()
+                dimension.place_forget()
+                boton_inicio.place_forget()
+                boton_regresar.place_forget()
+                etiqueta_error.place_forget()
+                creador_raiz.opcion_del_usuario = 1
+                creador_raiz.raiz.quit()
+            else: 
+                mostrar_error("La dimensión escogida es incorrecta.")
         else: 
-            mostrar_error("La dimensión escogida es incorrecta.")
+            mostrar_error("No puedes jugar contra ti mismo.")
     else: 
-        mostrar_error("No puedes jugar contra ti mismo.")
+        mostrar_error("Ninguna casilla puede estar vacía.")
 
 def regresar() -> None:
     """

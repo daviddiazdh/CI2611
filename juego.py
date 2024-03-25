@@ -8,20 +8,23 @@ import menu_pre_juego
 ##--------------------------------------------------------------------------------------#
 turno: int = 1
 partida : int = 0
-M : int = 300 #pixeles del tablero
+M_grande = 300
+M : int = M_grande/(3/2) #pixeles del tablero
 puntuacion: List[int] = [0,0]
 ##--------------------------------------------------------------------------------------#
 class Casilla:
     def __init__(self,
                 tablero : tk.Canvas, 
                 posicion : Tuple[int, int],
-                al_cambiar: Callable[[], None]):
+                al_cambiar: Callable[[], None], al_tocar : Callable[[], None], al_dejar_tocar : Callable[[], None]):
         self.tablero = tablero
         self.lado: int = M/int(menu_pre_juego.N)
         self.lienzo: tk.Canvas = tablero
         self.esq_superior_izq: Tuple[int, int] = posicion
         self.estado: int = 0 #estado varia entre 0,1 y 2 para indicar vacio, cruz y circunferencia, respectivamente.
         self.al_cambiar = al_cambiar
+        self.al_tocar = al_tocar
+        self.al_dejar_tocar = al_dejar_tocar
         self.casilla = 0
         self.figura : List[int] = []
         self.dibujar_casilla()
@@ -79,9 +82,22 @@ class Casilla:
             self.casilla,
             "<Button-1>",
             lambda event: ((self.crear_cruz() if (turno == 1) else self.crear_circulo()) if (self.estado == 0) else nada))
+        
+        self.tablero.tag_bind(
+            self.casilla,
+            "<Enter>",
+            lambda e : self.al_tocar()
+            )
+        
+        self.tablero.tag_bind(
+            self.casilla,
+            "<Leave>",
+            lambda e : self.al_dejar_tocar()
+            )
+
 
 class Tablero:
-    def __init__(self, raiz, M, N):
+    def __init__(self, raiz, M, N, x, al_ganar : Callable, al_procesar : Callable, al_tocar : Callable, al_dejar_tocar : Callable, ID : int):
         """
         Define los atributos iniciales del tablero.
 
@@ -94,11 +110,17 @@ class Tablero:
         * `None`: No devuelve nada.
         """
         self.tablero: tk.Canvas = tk.Canvas(raiz, width = M, height = M, background="black")
-        self.tablero.place(x = 150, y = 100)
+        self.x = x
+        self.tablero.place(x = 150 + x, y = 100 + x)
         self.tablero.update()
         self.N : int = N
         self.raiz : tk.Tk = raiz
         self.lado: int = M
+        self.al_ganar = al_ganar
+        self.al_tocar = al_tocar
+        self.al_dejar_tocar = al_dejar_tocar
+        self.al_procesar = al_procesar
+        self.ID = ID
         self.casillas: List[List[Casilla]] = []
         self.dibujar_tablero()
 
@@ -117,7 +139,7 @@ class Tablero:
             self.casillas.append([])
             i: int = 0
             while (i < self.N):
-                self.casillas[j].append(Casilla(self.tablero, (i * (self.lado / self.N), j * (self.lado / self.N)), self.procesar_tablero))
+                self.casillas[j].append(Casilla(self.tablero, (i * (self.lado / self.N), j * (self.lado / self.N)), self.procesar_tablero, self.llamar_a_desaparecer_tableros, self.llamar_a_reaparecer_tableros))
                 i += 1
             j += 1
     
@@ -176,6 +198,9 @@ class Tablero:
             empate = 0
         else:
             pass
+
+        ##Llamado al procesamiento intertablero
+        self.al_procesar()
         
         global partida
         #Verifica que no estén llenas las casillas:
@@ -207,7 +232,7 @@ class Tablero:
             partida += 1
             actualizar_puntuacion(puntuacion)
             sleep(1)
-            self.reiniciar_tablero()
+            self.al_ganar()
         else:
             texto_displayer(f" > ¡{menu_pre_juego.jugador_2} ha ganado!")
             puntuacion[1] += 1
@@ -217,7 +242,7 @@ class Tablero:
             partida += 1
             actualizar_puntuacion(puntuacion)
             sleep(1)
-            self.reiniciar_tablero()
+            self.al_ganar()
 
     def eliminar_tablero (self):
         """
@@ -230,6 +255,10 @@ class Tablero:
         * `None`: No devuelve nada.
         """
         self.tablero.place_forget()
+
+    def colocar_tablero (self):
+        self.tablero.place(x = 150 + self.x, y = 100 + self.x)
+        self.tablero.update()
 
     def reiniciar_tablero (self):
         """
@@ -248,6 +277,12 @@ class Tablero:
                     e.eliminar_figura()
         self.tablero.update()
 
+    def llamar_a_desaparecer_tableros (self):
+        self.al_tocar(self.ID)
+
+    def llamar_a_reaparecer_tableros (self):
+        self.al_dejar_tocar(self.ID)
+    
 #Funciones para botones#
 ##-------------------------------------------------------------------------------------#
 
@@ -261,6 +296,8 @@ def eliminar_imagen_juego() -> None:
     ### Retorno: 
     * `None`: No devuelve nada.
     """
+    global lista_tableros
+
     et_turno.place_forget()
     lienzo_turno.delete(cruz_1)
     lienzo_turno.delete(cruz_2)
@@ -276,14 +313,20 @@ def eliminar_imagen_juego() -> None:
     label_display.place_forget()
     lienzo_cuadro.place_forget()
     texto_display_SV.set(" > ")
-    lista_tableros[0].eliminar_tablero()
-    lista_tableros.pop(0)
+    for e in lista_tableros:
+        e.eliminar_tablero()
+
+    
+    lista_tableros = []
+
     boton_regresar.place_forget()
 
     global turno
     global puntuacion
+    global partida
     turno = 1
     puntuacion = [0,0]
+    partida = 0
     creador_raiz.raiz.quit()
 
 ##--------------------------------------------------------------------------------------#
@@ -430,8 +473,67 @@ def iniciar() -> None:
     boton_regresar.place(x=460, y=400)
 
     ##Tablero:
-    tablero : Tablero = Tablero(creador_raiz.raiz, M, int(menu_pre_juego.N))
-    lista_tableros.append(tablero)
+    i : int = 0
+    x : int = 0
+    while i < int(menu_pre_juego.N):
+        tablero : Tablero = Tablero(creador_raiz.raiz, M, int(menu_pre_juego.N), x, reiniciar_tableros , procesar_intertableros, desaparecer_tableros, reaparecer_tableros, i)
+        lista_tableros.append(tablero)
+        i += 1
+        x += 45
+    
+
+def reaparecer_tableros(x : int):
+
+    for e in lista_tableros:
+        if e.ID != x:
+            e.colocar_tablero()
+
+def desaparecer_tableros(x : int):
+
+    for e in lista_tableros:
+        if e.ID != x:
+            e.eliminar_tablero()
+
+def procesar_intertableros(): 
+
+    #Verificar inter filas
+    contador : int = 0
+    global partida 
+    global turno
+
+    for i in range(0, int(menu_pre_juego.N)):
+        for j in range(0, int(menu_pre_juego.N)):
+            contador = 1
+            for k in range(0, len(lista_tableros) - 1):
+                if lista_tableros[k].casillas[i][j].estado != lista_tableros[k + 1].casillas[i][j].estado or lista_tableros[k].casillas[i][j].estado == 0 or lista_tableros[k + 1].casillas[i][j].estado == 0:
+                    break
+                contador += 1
+                if contador == len(lista_tableros):
+                    if (turno == 2): #El ganador fue el jugador 1
+                        texto_displayer(f" > ¡{menu_pre_juego.jugador_1} ha ganado!")
+                        puntuacion[0] += 1
+                        if partida % 2 == 1: 
+                            turno = 1
+                            cambia_turno()
+                        partida += 1
+                        actualizar_puntuacion(puntuacion)
+                        sleep(1)
+                        reiniciar_tableros()
+                    else: 
+                        texto_displayer(f" > ¡{menu_pre_juego.jugador_2} ha ganado!")
+                        puntuacion[1] += 1
+                        if partida % 2 == 0: 
+                            turno = 2
+                            cambia_turno()
+                        partida += 1
+                        actualizar_puntuacion(puntuacion)
+                        sleep(1)
+                        reiniciar_tableros()
+        lista_tableros
+    
+def reiniciar_tableros():
+    for e in lista_tableros:
+        e.reiniciar_tablero()
 
 def cambia_turno() -> None:
     """
