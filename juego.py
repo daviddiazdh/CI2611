@@ -128,6 +128,7 @@ class Tablero:
         self.al_procesar = al_procesar
         self.ID = ID
         self.casillas: List[List[Casilla]] = []
+        self.marco: tk.Frame = tk.Frame(width= self.lado, height= self.lado/15, background= 'black')
         self.dibujar_tablero()
 
     def dibujar_tablero (self):
@@ -161,6 +162,8 @@ class Tablero:
             "<Button-3>",
             lambda e : self.al_dejar_tocar(self.ID)
             )
+        
+        self.marco.place(x = 150 + self.x, y= 100 + self.x - self.lado/15)
 
     def procesar_tablero (self):
         """
@@ -173,14 +176,12 @@ class Tablero:
         ### Retorno: 
         * `None`: No devuelve nada.
         """
-        empate : int = 1
         for j, fila in enumerate(self.casillas):
             for i in range(len(fila) - 1):
                 if (fila[i].estado == 0 or fila[i].estado != fila[i + 1].estado):
                     break
                 elif (fila[i].estado != 0 and fila[i].estado == fila[i + 1].estado and i == len(fila) - 2):
                     self.ganar_tablero()
-                    empate = 0
                 else:
                     pass
         
@@ -198,14 +199,12 @@ class Tablero:
                     contador = 0
             if (contador == self.N - 1):
                 self.ganar_tablero()
-                empate = 0
             else:
                 pass
         #Verifica diagonal
         
         if (all((self.casillas[i][i].estado != 0 and self.casillas[0][0].estado == self.casillas[i][i].estado) for i in range(self.N))):
             self.ganar_tablero()
-            empate = 0
         else:
             pass
 
@@ -214,7 +213,6 @@ class Tablero:
         if (all((self.casillas[i][self.N - 1 - i].estado != 0 and self.casillas[0][self.N - 1].estado == self.casillas[i][self.N - 1 - i].estado) for i in range(self.N))):
             sleep(0.5)
             self.ganar_tablero()
-            empate = 0
         else:
             pass
 
@@ -266,6 +264,7 @@ class Tablero:
         * `None`: No devuelve nada.
         """
         self.tablero.place_forget()
+        self.marco.place_forget()
 
     def colocar_tablero (self):
         self.tablero.place(x = 150 + self.x, y = 100 + self.x)
@@ -322,7 +321,6 @@ def eliminar_imagen_juego() -> None:
     texto_puntuacion_SV.set("0  -  0")
     label_puntuacion.place_forget()
     label_display.place_forget()
-    lienzo_cuadro.place_forget()
     texto_display_SV.set(" > ")
     for e in lista_tableros:
         e.eliminar_tablero()
@@ -394,9 +392,6 @@ label_puntuacion: tk.Label = tk.Label(
     foreground="white",
     highlightthickness=0
 )
-
-##Cuadro negro superior
-lienzo_cuadro: tk.Canvas = tk.Canvas(creador_raiz.raiz, width= 302, height= 20, background='black', highlightthickness=0)
 
 ##Lista de tableros
 lista_tableros : List[Tablero] = []
@@ -476,9 +471,6 @@ def iniciar() -> None:
     
     # Display de contador
     label_puntuacion.place(x= 483,y= 22)
-
-    ##Cuadro negro superior
-    lienzo_cuadro.place(x=150, y=80)
 
     ##Boton regresar
     boton_regresar.place(x=460, y=400)
