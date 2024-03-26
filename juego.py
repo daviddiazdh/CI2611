@@ -9,17 +9,17 @@ import menu_pre_juego
 ##--------------------------------------------------------------------------------------#
 turno: int = 1
 partida : int = 0
-M_grande = 300
-M : int = ((5*sqrt(2))/(2+5*sqrt(2))) * M_grande #pixeles del tablero
+espacio_tablero = 300
 puntuacion: List[int] = [0,0]
 ##--------------------------------------------------------------------------------------#
 class Casilla:
     def __init__(self,
                 tablero : tk.Canvas, 
                 posicion : Tuple[int, int],
+                dimension_tablero : int,
                 al_cambiar: Callable[[], None], al_tocar : Callable[[], None], al_dejar_tocar : Callable[[], None]):
         self.tablero = tablero
-        self.lado: int = M/int(menu_pre_juego.N)
+        self.lado: int = dimension_tablero/int(menu_pre_juego.N)
         self.lienzo: tk.Canvas = tablero
         self.esq_superior_izq: Tuple[int, int] = posicion
         self.estado: int = 0 #estado varia entre 0,1 y 2 para indicar vacio, cruz y circunferencia, respectivamente.
@@ -59,32 +59,6 @@ class Casilla:
         circulo_2 : int = self.tablero.create_oval(self.esq_superior_izq[0] + self.lado / 6 + self.lado / 5, self.esq_superior_izq[1] + self.lado / 6 + self.lado / 5, 
                             self.esq_superior_izq[0] + self.lado * (5/6) - self.lado/5, self.esq_superior_izq[1] + self.lado * (5/6) - self.lado / 5, fill = "white")
         self.estado = 2
-
-        """
-        self.tablero.tag_bind(
-            circulo_1,
-            "<Enter>",
-            lambda e : self.al_tocar()
-            )
-        
-        self.tablero.tag_bind(
-            circulo_2,
-            "<Enter>",
-            lambda e : self.al_tocar()
-            )
-        
-        self.tablero.tag_bind(
-            circulo_1,
-            "<Leave>",
-            lambda e : self.al_dejar_tocar()
-            )
-        
-        self.tablero.tag_bind(
-            circulo_2,
-            "<Leave>",
-            lambda e : self.al_dejar_tocar()
-            )
-        """
 
         self.figura.append(circulo_1)
         self.figura.append(circulo_2)
@@ -172,7 +146,7 @@ class Tablero:
             self.casillas.append([])
             i: int = 0
             while (i < self.N):
-                self.casillas[j].append(Casilla(self.tablero, (i * (self.lado / self.N), j * (self.lado / self.N)), self.procesar_tablero, self.llamar_a_desaparecer_tableros, self.llamar_a_reaparecer_tableros))
+                self.casillas[j].append(Casilla(self.tablero, (i * (self.lado / self.N), j * (self.lado / self.N)), (5 * espacio_tablero)/(4 + int(menu_pre_juego.N)), self.procesar_tablero, self.llamar_a_desaparecer_tableros, self.llamar_a_reaparecer_tableros))
                 i += 1
             j += 1
         rec_1 : int = self.tablero.create_rectangle(0, self.lado - 10, 10, self.lado, fill="gray")
@@ -521,10 +495,10 @@ def iniciar() -> None:
     i : int = 0
     x : int = 0
     while i < int(menu_pre_juego.N):
-        tablero : Tablero = Tablero(creador_raiz.raiz, M, int(menu_pre_juego.N), x, reiniciar_tableros , procesar_intertableros, desaparecer_tableros, reaparecer_tableros, i)
+        tablero : Tablero = Tablero(creador_raiz.raiz, (5 * espacio_tablero)/(4 + int(menu_pre_juego.N)), int(menu_pre_juego.N), x, reiniciar_tableros , procesar_intertableros, desaparecer_tableros, reaparecer_tableros, i)
         lista_tableros.append(tablero)
         i += 1
-        x += M/5
+        x += (5 * espacio_tablero)/(4 + int(menu_pre_juego.N))/5
     
 
 def reaparecer_tableros(x : int):
@@ -592,13 +566,11 @@ def procesar_intertableros():
     for i in range(0, int(menu_pre_juego.N)):
         contador = 1
         for j in range(0, len(lista_tableros) - 1):
-            if lista_tableros[j].casillas[i][j].estado != lista_tableros[j+1].casillas[i][j+1].estado or lista_tableros[j].casillas[i][j].estado == 0 or lista_tableros[j+1].casillas[i][j+1].estado == 0:
+            if lista_tableros[j].casillas[i][int(menu_pre_juego.N)- (1 + j)].estado != lista_tableros[j+1].casillas[i][int(menu_pre_juego.N)- (j + 2)].estado or lista_tableros[j].casillas[i][int(menu_pre_juego.N)- (1 + j)].estado == 0 or lista_tableros[j+1].casillas[i][int(menu_pre_juego.N)- (j + 2)].estado == 0:
                 break
             contador += 1
             if contador == len(lista_tableros):
                 ganar_tableros()
-
-
 
 
 def ganar_tableros():
