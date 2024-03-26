@@ -1,7 +1,6 @@
 import tkinter as tk
 from typing import List, Tuple, Callable
 from time import sleep 
-from math import sqrt
 import creador_raiz
 import menu_pre_juego
 
@@ -149,7 +148,8 @@ class Tablero:
                 self.casillas[j].append(Casilla(self.tablero, (i * (self.lado / self.N), j * (self.lado / self.N)), (5 * espacio_tablero)/(4 + int(menu_pre_juego.N)), self.procesar_tablero, self.llamar_a_desaparecer_tableros, self.llamar_a_reaparecer_tableros))
                 i += 1
             j += 1
-        rec_1 : int = self.tablero.create_rectangle(0, self.lado - 10, 10, self.lado, fill="gray")
+        rec_1 : int = self.tablero.create_rectangle(0, self.lado - self.lado/18, self.lado/18, self.lado, fill="gray")
+        
         self.tablero.tag_bind(
             rec_1,
             "<Button-1>",
@@ -301,7 +301,7 @@ class Tablero:
 
     def llamar_a_reaparecer_tableros (self):
         self.al_dejar_tocar(self.ID)
-    
+
 #Funciones para botones#
 ##-------------------------------------------------------------------------------------#
 
