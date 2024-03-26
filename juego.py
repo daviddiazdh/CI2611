@@ -1,6 +1,7 @@
 import tkinter as tk
 from typing import List, Tuple, Callable
 from time import sleep 
+from math import sqrt
 import creador_raiz
 import menu_pre_juego
 
@@ -9,7 +10,7 @@ import menu_pre_juego
 turno: int = 1
 partida : int = 0
 M_grande = 300
-M : int = M_grande/(3/2) #pixeles del tablero
+M : int = ((5*sqrt(2))/(2+5*sqrt(2))) * M_grande #pixeles del tablero
 puntuacion: List[int] = [0,0]
 ##--------------------------------------------------------------------------------------#
 class Casilla:
@@ -37,29 +38,6 @@ class Casilla:
                             self.esq_superior_izq[0] + self.lado / 5, self.esq_superior_izq[1] + self.lado * (4/5), fill = "black", width = self.lado / 5)
         self.estado = 1
         
-        self.tablero.tag_bind(
-            linea_1,
-            "<Enter>",
-            lambda e : self.al_tocar()
-            )
-        
-        self.tablero.tag_bind(
-            linea_2,
-            "<Enter>",
-            lambda e : self.al_tocar()
-            )
-
-        self.tablero.tag_bind(
-            linea_1,
-            "<Leave>",
-            lambda e : self.al_dejar_tocar()
-            )
-
-        self.tablero.tag_bind(
-            linea_2,
-            "<Leave>",
-            lambda e : self.al_dejar_tocar()
-            )
         
         self.tablero.update() 
 
@@ -82,6 +60,7 @@ class Casilla:
                             self.esq_superior_izq[0] + self.lado * (5/6) - self.lado/5, self.esq_superior_izq[1] + self.lado * (5/6) - self.lado / 5, fill = "white")
         self.estado = 2
 
+        """
         self.tablero.tag_bind(
             circulo_1,
             "<Enter>",
@@ -105,7 +84,8 @@ class Casilla:
             "<Leave>",
             lambda e : self.al_dejar_tocar()
             )
-        
+        """
+
         self.figura.append(circulo_1)
         self.figura.append(circulo_2)
 
@@ -133,18 +113,21 @@ class Casilla:
             "<Button-1>",
             lambda event: ((self.crear_cruz() if (turno == 1) else self.crear_circulo()) if (self.estado == 0) else nada))
 
+        """
         self.tablero.tag_bind(
             self.casilla,
             "<Enter>",
             lambda e : self.al_tocar()
             )
+        """
         
+        """
         self.tablero.tag_bind(
             self.casilla,
             "<Leave>",
             lambda e : self.al_dejar_tocar()
             )
-
+        """
 
 class Tablero:
     def __init__(self, raiz, M, N, x, al_ganar : Callable, al_procesar : Callable, al_tocar : Callable, al_dejar_tocar : Callable, ID : int):
@@ -192,7 +175,19 @@ class Tablero:
                 self.casillas[j].append(Casilla(self.tablero, (i * (self.lado / self.N), j * (self.lado / self.N)), self.procesar_tablero, self.llamar_a_desaparecer_tableros, self.llamar_a_reaparecer_tableros))
                 i += 1
             j += 1
-    
+        rec_1 : int = self.tablero.create_rectangle(0, self.lado - 10, 10, self.lado, fill="gray")
+        self.tablero.tag_bind(
+            rec_1,
+            "<Button-1>",
+            lambda e : self.al_tocar(self.ID)
+            )
+        
+        self.tablero.tag_bind(
+            rec_1,
+            "<Button-3>",
+            lambda e : self.al_dejar_tocar(self.ID)
+            )
+
     def procesar_tablero (self):
         """
         Procesa el tablero. 
@@ -529,7 +524,7 @@ def iniciar() -> None:
         tablero : Tablero = Tablero(creador_raiz.raiz, M, int(menu_pre_juego.N), x, reiniciar_tableros , procesar_intertableros, desaparecer_tableros, reaparecer_tableros, i)
         lista_tableros.append(tablero)
         i += 1
-        x += 45
+        x += M/5
     
 
 def reaparecer_tableros(x : int):
@@ -546,10 +541,8 @@ def desaparecer_tableros(x : int):
 
 def procesar_intertableros(): 
 
-    #Verificar inter filas
+    #Verificar inter filas:
     contador : int = 0
-    global partida 
-    global turno
 
     for i in range(0, int(menu_pre_juego.N)):
         for j in range(0, int(menu_pre_juego.N)):
@@ -559,28 +552,80 @@ def procesar_intertableros():
                     break
                 contador += 1
                 if contador == len(lista_tableros):
-                    if (turno == 2): #El ganador fue el jugador 1
-                        texto_displayer(f" > ¡{menu_pre_juego.jugador_1} ha ganado!")
-                        puntuacion[0] += 1
-                        if partida % 2 == 1: 
-                            turno = 1
-                            cambia_turno()
-                        partida += 1
-                        actualizar_puntuacion(puntuacion)
-                        sleep(1)
-                        reiniciar_tableros()
-                    else: 
-                        texto_displayer(f" > ¡{menu_pre_juego.jugador_2} ha ganado!")
-                        puntuacion[1] += 1
-                        if partida % 2 == 0: 
-                            turno = 2
-                            cambia_turno()
-                        partida += 1
-                        actualizar_puntuacion(puntuacion)
-                        sleep(1)
-                        reiniciar_tableros()
-        lista_tableros
+                    ganar_tableros()
+
+
+    #Verificar inter diagonal principal 3D:
+                    
+    for j in range(0, int(menu_pre_juego.N)):
+        contador = 1
+        for i in range(0, len(lista_tableros) - 1):
+            if lista_tableros[i].casillas[i][j].estado != lista_tableros[i+1].casillas[i+1][j].estado or lista_tableros[i].casillas[i][j].estado == 0 or lista_tableros[i+1].casillas[i+1][j].estado == 0:
+                break
+            contador += 1
+            if contador == len(lista_tableros):
+                ganar_tableros()
     
+    #Verificar inter diagonal secundaria 3D:
+                    
+    for j in range(0, int(menu_pre_juego.N)):
+        contador = 1
+        for i in range(0, len(lista_tableros) - 1):
+            if lista_tableros[i].casillas[int(menu_pre_juego.N)- (1 + i)][j].estado != lista_tableros[i+1].casillas[int(menu_pre_juego.N) - (i + 2)][j].estado or lista_tableros[i].casillas[int(menu_pre_juego.N) - (i + 1)][j].estado == 0 or lista_tableros[i+1].casillas[int(menu_pre_juego.N)-(i + 2)][j].estado == 0:
+                break
+            contador += 1
+            if contador == len(lista_tableros):
+                ganar_tableros()
+
+
+    #Verificar inter diagonal principal plana:         
+    for i in range(0, int(menu_pre_juego.N)):
+        contador = 1
+        for j in range(0, len(lista_tableros) - 1):
+            if lista_tableros[j].casillas[i][j].estado != lista_tableros[j+1].casillas[i][j+1].estado or lista_tableros[j].casillas[i][j].estado == 0 or lista_tableros[j+1].casillas[i][j+1].estado == 0:
+                break
+            contador += 1
+            if contador == len(lista_tableros):
+                ganar_tableros()
+    
+    #Verificar inter diagonal secundaria plana:         
+    for i in range(0, int(menu_pre_juego.N)):
+        contador = 1
+        for j in range(0, len(lista_tableros) - 1):
+            if lista_tableros[j].casillas[i][j].estado != lista_tableros[j+1].casillas[i][j+1].estado or lista_tableros[j].casillas[i][j].estado == 0 or lista_tableros[j+1].casillas[i][j+1].estado == 0:
+                break
+            contador += 1
+            if contador == len(lista_tableros):
+                ganar_tableros()
+
+
+
+
+def ganar_tableros():
+    global partida 
+    global turno
+
+    if (turno == 2): #El ganador fue el jugador 1
+        texto_displayer(f" > ¡{menu_pre_juego.jugador_1} ha ganado!")
+        puntuacion[0] += 1
+        if partida % 2 == 1: 
+            turno = 1
+            cambia_turno()
+        partida += 1
+        actualizar_puntuacion(puntuacion)
+        sleep(1)
+        reiniciar_tableros()
+    else: 
+        texto_displayer(f" > ¡{menu_pre_juego.jugador_2} ha ganado!")
+        puntuacion[1] += 1
+        if partida % 2 == 0: 
+            turno = 2
+            cambia_turno()
+        partida += 1
+        actualizar_puntuacion(puntuacion)
+        sleep(1)
+        reiniciar_tableros()
+
 def reiniciar_tableros():
     for e in lista_tableros:
         e.reiniciar_tablero()
