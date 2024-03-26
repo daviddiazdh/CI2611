@@ -220,14 +220,6 @@ class Tablero:
 
         ##Llamado al procesamiento intertablero
         self.al_procesar()
-        
-        global partida
-        #Verifica que no estén llenas las casillas:
-        if  all( all(j.estado != 0 for j in i) for i in self.casillas) and empate == 1:
-            sleep(1)
-            texto_displayer("> ¡Empate!")
-            partida += 1
-            self.reiniciar_tablero()
 
     def ganar_tablero (self):
         """
