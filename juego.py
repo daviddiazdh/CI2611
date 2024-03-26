@@ -128,7 +128,7 @@ class Tablero:
         self.al_procesar = al_procesar
         self.ID = ID
         self.casillas: List[List[Casilla]] = []
-        self.marco: tk.Frame = tk.Frame(width= self.lado, height= self.lado/15, background= 'black')
+        self.marco: tk.Frame = tk.Frame(width= self.lado, height= self.lado/22, background= 'black')
         self.dibujar_tablero()
 
     def dibujar_tablero (self):
@@ -163,7 +163,7 @@ class Tablero:
             lambda e : self.al_dejar_tocar(self.ID)
             )
         
-        self.marco.place(x = 150 + self.x, y= 100 + self.x - self.lado/15)
+        self.marco.place(x = 150 + self.x, y= 100 + self.x - self.lado/22)
 
     def procesar_tablero (self):
         """
