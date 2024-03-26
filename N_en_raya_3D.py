@@ -26,31 +26,33 @@ def eliminar_fondo(fondo_etiqueta : tk.Label) -> None:
     """
     fondo_etiqueta.place_forget()
 
-while True:
-    colocar_fondo(menu_principal.fondo_etiqueta)
-    menu_principal.iniciar()
-    creador_raiz.raiz.mainloop()
+try:
+    while True:
+        colocar_fondo(menu_principal.fondo_etiqueta)
+        menu_principal.iniciar()
+        creador_raiz.raiz.mainloop()
 
-    if creador_raiz.salir == True:
-        break
+        if creador_raiz.salir == True:
+            break
 
-    eliminar_fondo(menu_principal.fondo_etiqueta)
+        eliminar_fondo(menu_principal.fondo_etiqueta)
 
-    if creador_raiz.opcion_del_usuario == 1:
-        colocar_fondo(menu_pre_juego.fondo_etiqueta)
+        if creador_raiz.opcion_del_usuario == 1:
+            colocar_fondo(menu_pre_juego.fondo_etiqueta)
 
-    menu_pre_juego.iniciar()
+        menu_pre_juego.iniciar()
 
-    creador_raiz.raiz.mainloop()
+        creador_raiz.raiz.mainloop()
 
-    eliminar_fondo(menu_pre_juego.fondo_etiqueta)
+        eliminar_fondo(menu_pre_juego.fondo_etiqueta)
 
-    if creador_raiz.opcion_del_usuario == 1:
-        colocar_fondo(juego.fondo_etiqueta)
+        if creador_raiz.opcion_del_usuario == 1:
+            colocar_fondo(juego.fondo_etiqueta)
 
-    juego.iniciar()
+        juego.iniciar()
 
-    creador_raiz.raiz.mainloop()
+        creador_raiz.raiz.mainloop()
 
-    eliminar_fondo(juego.fondo_etiqueta)
-
+        eliminar_fondo(juego.fondo_etiqueta)
+except: 
+    pass

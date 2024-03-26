@@ -517,6 +517,8 @@ def procesar_intertableros():
 
     #Verificar inter filas:
     contador : int = 0
+    empate : int = 1
+    global partida
 
     for i in range(0, int(menu_pre_juego.N)):
         for j in range(0, int(menu_pre_juego.N)):
@@ -526,6 +528,7 @@ def procesar_intertableros():
                     break
                 contador += 1
                 if contador == len(lista_tableros):
+                    empate = 0
                     ganar_tableros()
 
 
@@ -538,6 +541,7 @@ def procesar_intertableros():
                 break
             contador += 1
             if contador == len(lista_tableros):
+                empate = 0
                 ganar_tableros()
     
     #Verificar inter diagonal secundaria 3D:
@@ -549,6 +553,7 @@ def procesar_intertableros():
                 break
             contador += 1
             if contador == len(lista_tableros):
+                empate = 0
                 ganar_tableros()
 
 
@@ -560,6 +565,7 @@ def procesar_intertableros():
                 break
             contador += 1
             if contador == len(lista_tableros):
+                empate = 0
                 ganar_tableros()
     
     #Verificar inter diagonal secundaria plana:         
@@ -570,8 +576,57 @@ def procesar_intertableros():
                 break
             contador += 1
             if contador == len(lista_tableros):
+                empate = 0
                 ganar_tableros()
 
+
+    ##Verificar la diagonal inter tablero:
+    contador = 1
+    for i in range(0, int(menu_pre_juego.N) - 1):
+        if lista_tableros[i].casillas[i][i].estado != lista_tableros[i+1].casillas[i+1][i+1].estado or lista_tableros[i].casillas[i][i].estado == 0 or lista_tableros[i+1].casillas[i+1][i+1].estado == 0:
+            break
+        contador += 1
+        if contador == len(lista_tableros):
+            empate = 0
+            ganar_tableros()
+
+    
+    #Verificar la diagonal secundaria intertablero:
+    contador = 1
+    for i in range(0, int(menu_pre_juego.N) - 1):
+        if lista_tableros[i].casillas[i][int(menu_pre_juego.N) - (i+1)].estado != lista_tableros[i+1].casillas[i+1][int(menu_pre_juego.N)- (i + 2)].estado or lista_tableros[i].casillas[i][int(menu_pre_juego.N)- (i+1)].estado == 0 or lista_tableros[i+1].casillas[i+1][int(menu_pre_juego.N)- (i + 2)].estado == 0:
+            break
+        contador += 1
+        if contador == len(lista_tableros):
+            empate = 0
+            ganar_tableros()
+
+    #Verificar la diagonal terciaria intertablero:
+    contador = 1
+    for i in range(0, int(menu_pre_juego.N) - 1):
+        if lista_tableros[i].casillas[int(menu_pre_juego.N) - (i+1)][i].estado != lista_tableros[i+1].casillas[int(menu_pre_juego.N)- (i + 2)][i+1].estado or lista_tableros[i].casillas[int(menu_pre_juego.N)- (i+1)][i].estado == 0 or lista_tableros[i+1].casillas[int(menu_pre_juego.N)- (i + 2)][i+1].estado == 0:
+            break
+        contador += 1
+        if contador == len(lista_tableros):
+            empate = 0
+            ganar_tableros()
+    
+    #Verificar la diagonal cuaternaria intertablero:
+    contador = 1
+    for i in range(0, int(menu_pre_juego.N) - 1):
+        if lista_tableros[i].casillas[int(menu_pre_juego.N) - (i+1)][int(menu_pre_juego.N) - (i+1)].estado != lista_tableros[i+1].casillas[int(menu_pre_juego.N)- (i + 2)][int(menu_pre_juego.N)- (i + 2)].estado or lista_tableros[i].casillas[int(menu_pre_juego.N)- (i+1)][int(menu_pre_juego.N)- (i+1)].estado == 0 or lista_tableros[i+1].casillas[int(menu_pre_juego.N)- (i + 2)][int(menu_pre_juego.N)- (i + 2)].estado == 0:
+            break
+        contador += 1
+        if contador == len(lista_tableros):
+            empate = 0
+            ganar_tableros()
+
+    #Verificar empate
+    if all( all(all(i.estado != 0 for i in j) for j in k.casillas) for k in lista_tableros) and (empate == 1):
+        sleep(1)
+        texto_displayer("> ¡Empate!")
+        partida += 1
+        reiniciar_tableros()
 
 def ganar_tableros():
     global partida 
