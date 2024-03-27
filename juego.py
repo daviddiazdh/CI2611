@@ -22,6 +22,7 @@ class Casilla:
         self.lienzo: tk.Canvas = tablero
         self.esq_superior_izq: Tuple[int, int] = posicion
         self.estado: int = 0 #estado varia entre 0,1 y 2 para indicar vacio, cruz y circunferencia, respectivamente.
+        self.se_muestra : int = 0 #varia entre 0, 1 según si se muestra o no
         self.al_cambiar = al_cambiar
         self.al_tocar = al_tocar
         self.al_dejar_tocar = al_dejar_tocar
@@ -84,23 +85,8 @@ class Casilla:
         self.tablero.tag_bind(
             self.casilla,
             "<Button-1>",
-            lambda event: ((self.crear_cruz() if (turno == 1) else self.crear_circulo()) if (self.estado == 0) else nada))
+            lambda event: ((self.crear_cruz() if (turno == 1) else self.crear_circulo()) if (self.estado == 0 and self.se_muestra == 0) else nada))
 
-        """
-        self.tablero.tag_bind(
-            self.casilla,
-            "<Enter>",
-            lambda e : self.al_tocar()
-            )
-        """
-        
-        """
-        self.tablero.tag_bind(
-            self.casilla,
-            "<Leave>",
-            lambda e : self.al_dejar_tocar()
-            )
-        """
 
 class Tablero:
     def __init__(self, raiz, M, N, x, al_ganar : Callable, al_procesar : Callable, al_tocar : Callable, al_dejar_tocar : Callable, ID : int):
@@ -268,6 +254,7 @@ class Tablero:
 
     def colocar_tablero (self):
         self.tablero.place(x = 150 + self.x, y = 100 + self.x)
+        self.marco.place(x = 150 + self.x, y= 100 + self.x - self.lado/22)
         self.tablero.update()
 
     def reiniciar_tablero (self):
@@ -284,6 +271,7 @@ class Tablero:
             for e in row: 
                 if e.estado != 0:
                     e.estado = 0
+                    e.se_muestra = 0
                     e.eliminar_figura()
         self.tablero.update()
 
@@ -484,7 +472,6 @@ def iniciar() -> None:
         i += 1
         x += (5 * espacio_tablero)/(4 + int(menu_pre_juego.N))/5
     
-
 def reaparecer_tableros(x : int):
 
     for e in lista_tableros:
