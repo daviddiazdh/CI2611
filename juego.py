@@ -10,6 +10,7 @@ turno: int = 1
 partida : int = 0
 espacio_tablero = 300
 puntuacion: List[int] = [0,0]
+esta_boton: int = 0
 ##--------------------------------------------------------------------------------------#
 class Casilla:
     def __init__(self,
@@ -310,6 +311,10 @@ def eliminar_imagen_juego() -> None:
     lista_tableros = []
 
     boton_regresar.place_forget()
+
+    
+    if esta_boton == 1:
+        boton_continuar.place_forget()
 
     global turno
     global puntuacion
@@ -678,6 +683,9 @@ def reiniciar_tableros():
     
     boton_continuar.place_forget()
 
+    global esta_boton
+    esta_boton = 0
+
     for i in lista_tableros:
         for j in i.casillas:
             for k in j:
@@ -739,6 +747,9 @@ def actualizar_puntuacion(puntaje: List[int]) -> None:
 
 def colocar_boton_continuar():
     boton_continuar.place(x=460, y=350)
+
+    global esta_boton
+    esta_boton = 1
 
 boton_continuar : tk.Button = tk.Button(creador_raiz.raiz, text='Continuar', font= ('Arial Black', 10), background="black", foreground="white", command= reiniciar_tableros)
 
