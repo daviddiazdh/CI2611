@@ -17,7 +17,8 @@ class Casilla:
                 tablero : tk.Canvas, 
                 posicion : Tuple[int, int],
                 dimension_tablero : int,
-                al_cambiar: Callable[[], None], al_tocar : Callable[[], None], al_dejar_tocar : Callable[[], None]):
+                al_cambiar: Callable[[], None], 
+                ):
         self.tablero = tablero
         self.lado: int = dimension_tablero/int(menu_pre_juego.N)
         self.lienzo: tk.Canvas = tablero
@@ -25,8 +26,6 @@ class Casilla:
         self.estado: int = 0 #estado varia entre 0,1 y 2 para indicar vacio, cruz y circunferencia, respectivamente.
         self.se_muestra : int = 0 #varia entre 0, 1 según si se muestra o no
         self.al_cambiar = al_cambiar
-        self.al_tocar = al_tocar
-        self.al_dejar_tocar = al_dejar_tocar
         self.casilla = 0
         self.figura : List[int] = []
         self.dibujar_casilla()
@@ -136,7 +135,7 @@ class Tablero:
             self.casillas.append([])
             i: int = 0
             while (i < self.N):
-                self.casillas[j].append(Casilla(self.tablero, (i * (self.lado / self.N), j * (self.lado / self.N)), (5 * espacio_tablero)/(4 + int(menu_pre_juego.N)), self.procesar_tablero, self.llamar_a_desaparecer_tableros, self.llamar_a_reaparecer_tableros))
+                self.casillas[j].append(Casilla(self.tablero, (i * (self.lado / self.N), j * (self.lado / self.N)), (5 * espacio_tablero)/(4 + int(menu_pre_juego.N)), self.procesar_tablero))
                 i += 1
             j += 1
         rec_1 : int = self.tablero.create_rectangle(0, self.lado - self.lado/18, self.lado/18, self.lado, fill="gray")
