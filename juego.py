@@ -289,6 +289,7 @@ def eliminar_imagen_juego() -> None:
     * `None`: No devuelve nada.
     """
     global lista_tableros
+    global esta_boton
 
     et_turno.place_forget()
     lienzo_turno.delete(cruz_1)
@@ -319,7 +320,6 @@ def eliminar_imagen_juego() -> None:
     global turno
     global puntuacion
     global partida
-    global esta_boton
     turno = 1
     puntuacion = [0,0]
     partida = 0
