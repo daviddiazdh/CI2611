@@ -312,16 +312,18 @@ def eliminar_imagen_juego() -> None:
 
     boton_regresar.place_forget()
 
-    
+
     if esta_boton == 1:
         boton_continuar.place_forget()
 
     global turno
     global puntuacion
     global partida
+    global esta_boton
     turno = 1
     puntuacion = [0,0]
     partida = 0
+    esta_boton = 0
     creador_raiz.raiz.quit()
 
 ##--------------------------------------------------------------------------------------#
