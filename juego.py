@@ -166,6 +166,7 @@ class Tablero:
         ### Retorno: 
         * `None`: No devuelve nada.
         """
+        ##Verifica filas           (0)
         for j, fila in enumerate(self.casillas):
             for i in range(len(fila) - 1):
                 if (fila[i].estado == 0 or fila[i].estado != fila[i + 1].estado):
@@ -177,7 +178,7 @@ class Tablero:
                     pass
         
         
-        #Verifica columnas
+        #Verifica columnas          (1)
         contador: int = 0
         for i in range(self.N):
             contador = 0
@@ -193,19 +194,19 @@ class Tablero:
                 self.al_ganar()
             else:
                 pass
-        #Verifica diagonal
+        #Verifica diagonal    (2)    
         
         if (all((self.casillas[i][i].estado != 0 and self.casillas[0][0].estado == self.casillas[i][i].estado) for i in range(self.N))):
-            self.pintar_tablero(2,i)
+            self.pintar_tablero(2)
             self.al_ganar()
         else:
             pass
 
-        #Verifica diagonal secundaria
+        #Verifica diagonal secundaria      (3)
 
         if (all((self.casillas[i][self.N - 1 - i].estado != 0 and self.casillas[0][self.N - 1].estado == self.casillas[i][self.N - 1 - i].estado) for i in range(self.N))):
             sleep(0.5)
-            self.pintar_tablero(3,i)
+            self.pintar_tablero(3)
             self.al_ganar()
         else:
             pass
@@ -249,7 +250,7 @@ class Tablero:
                     e.eliminar_figura()
         self.tablero.update()
 
-    def pintar_tablero (self, victoria, lugar):
+    def pintar_tablero (self, victoria, lugar = 0):
         
         if victoria == 0:
             for i in self.casillas[lugar]:
@@ -312,7 +313,6 @@ def eliminar_imagen_juego() -> None:
     lista_tableros = []
 
     boton_regresar.place_forget()
-
 
     if esta_boton == 1:
         boton_continuar.place_forget()
@@ -423,7 +423,6 @@ boton_regresar.bind(
     '<Leave>',
     cambio_color_2
     )
-
 
 #--------------------------------------------------------------------------------------#
 
@@ -614,7 +613,7 @@ def procesar_intertableros():
         partida += 1
         reiniciar_tableros()
 
-def pintar_tableros(victoria, fila = 0, columna = 0):
+def pintar_tableros(victoria : int, fila : int = 0, columna : int  = 0):
 
     if victoria == 0:
         for i in lista_tableros:
@@ -656,8 +655,8 @@ def ganar_tableros():
             cambia_turno()
         partida += 1
         actualizar_puntuacion(puntuacion)
-        sleep(1)
-
+        sleep(0.3)
+        
         mostrar_victoria()
 
         colocar_boton_continuar()
@@ -669,7 +668,7 @@ def ganar_tableros():
             cambia_turno()
         partida += 1
         actualizar_puntuacion(puntuacion)
-        sleep(1)
+        sleep(0.3)
 
         mostrar_victoria()
 
