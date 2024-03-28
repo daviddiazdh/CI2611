@@ -49,10 +49,10 @@ try:
         if creador_raiz.opcion_del_usuario == 1:
             colocar_fondo(juego.fondo_etiqueta)
 
-        juego.iniciar()
+            juego.iniciar()
 
-        creador_raiz.raiz.mainloop()
+            creador_raiz.raiz.mainloop()
 
-        eliminar_fondo(juego.fondo_etiqueta)
+            eliminar_fondo(juego.fondo_etiqueta)
 except: 
     pass

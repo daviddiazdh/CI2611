@@ -87,9 +87,11 @@ class Casilla:
             "<Button-1>",
             lambda event: ((self.crear_cruz() if (turno == 1) else self.crear_circulo()) if (self.estado == 0 and self.se_muestra == 0) else nada))
 
+    def pintar_casilla(self, color):
+        self.tablero.itemconfig(self.casilla, fill=color)
 
 class Tablero:
-    def __init__(self, raiz, M, N, x, al_ganar : Callable, al_procesar : Callable, al_tocar : Callable, al_dejar_tocar : Callable, ID : int):
+    def __init__(self, raiz, M, N, x, al_ganar : Callable, al_procesar : Callable, al_tocar : Callable, al_dejar_tocar : Callable, ID : int, al_mostrar_victoria : Callable):
         """
         Define los atributos iniciales del tablero.
 
@@ -112,6 +114,7 @@ class Tablero:
         self.al_tocar = al_tocar
         self.al_dejar_tocar = al_dejar_tocar
         self.al_procesar = al_procesar
+        self.al_mostrar_victoria = al_mostrar_victoria
         self.ID = ID
         self.casillas: List[List[Casilla]] = []
         self.marco: tk.Frame = tk.Frame(width= self.lado, height= self.lado/22, background= 'black')
@@ -167,11 +170,12 @@ class Tablero:
                 if (fila[i].estado == 0 or fila[i].estado != fila[i + 1].estado):
                     break
                 elif (fila[i].estado != 0 and fila[i].estado == fila[i + 1].estado and i == len(fila) - 2):
-                    self.ganar_tablero()
+                    self.pintar_tablero(0, j)
+                    self.al_ganar()
                 else:
                     pass
         
-
+        
         #Verifica columnas
         contador: int = 0
         for i in range(self.N):
@@ -184,13 +188,15 @@ class Tablero:
                 else:
                     contador = 0
             if (contador == self.N - 1):
-                self.ganar_tablero()
+                self.pintar_tablero(1,i)
+                self.al_ganar()
             else:
                 pass
         #Verifica diagonal
         
         if (all((self.casillas[i][i].estado != 0 and self.casillas[0][0].estado == self.casillas[i][i].estado) for i in range(self.N))):
-            self.ganar_tablero()
+            self.pintar_tablero(2,i)
+            self.al_ganar()
         else:
             pass
 
@@ -198,46 +204,13 @@ class Tablero:
 
         if (all((self.casillas[i][self.N - 1 - i].estado != 0 and self.casillas[0][self.N - 1].estado == self.casillas[i][self.N - 1 - i].estado) for i in range(self.N))):
             sleep(0.5)
-            self.ganar_tablero()
+            self.pintar_tablero(3,i)
+            self.al_ganar()
         else:
             pass
 
         ##Llamado al procesamiento intertablero
         self.al_procesar()
-
-    def ganar_tablero (self):
-        """
-        Se llama cuando se encuentra una figura ganadora en el tablero. 
-        Esta función básicamente muestra un mensaje en un displayer y luego llama a otra función que reinicia el tablero.
-        
-        ### Parámetros:
-        * `self`: Referencia a sí mismo.
-
-        ### Retorno: 
-        * `None`: No devuelve nada.
-        """
-        global partida
-        global turno
-        if (turno == 2): #El ganador fue el jugador 1
-            texto_displayer(f" > ¡{menu_pre_juego.jugador_1} ha ganado!")
-            puntuacion[0] += 1
-            if partida % 2 == 1: 
-                turno = 1
-                cambia_turno()
-            partida += 1
-            actualizar_puntuacion(puntuacion)
-            sleep(1)
-            self.al_ganar()
-        else:
-            texto_displayer(f" > ¡{menu_pre_juego.jugador_2} ha ganado!")
-            puntuacion[1] += 1
-            if partida % 2 == 0: 
-                turno = 2
-                cambia_turno()
-            partida += 1
-            actualizar_puntuacion(puntuacion)
-            sleep(1)
-            self.al_ganar()
 
     def eliminar_tablero (self):
         """
@@ -274,6 +247,26 @@ class Tablero:
                     e.se_muestra = 0
                     e.eliminar_figura()
         self.tablero.update()
+
+    def pintar_tablero (self, victoria, lugar):
+        
+        if victoria == 0:
+            for i in self.casillas[lugar]:
+                i.pintar_casilla("pink")
+        elif victoria == 1:
+            for i in self.casillas:
+                i[lugar].pintar_casilla("pink")
+        elif victoria == 2:
+            for i in range(0, self.N):
+                self.casillas[i][i].pintar_casilla("pink")
+        elif victoria == 3:
+            for i in range(0, self.N):
+                self.casillas[i][self.N - (i + 1)].pintar_casilla("pink")
+
+    def mostrar_victoria_tablero (self):
+        for i in self.casillas:
+            for j in i:
+                j.se_muestra = 1
 
     def llamar_a_desaparecer_tableros (self):
         self.al_tocar(self.ID)
@@ -424,6 +417,7 @@ boton_regresar.bind(
     cambio_color_2
     )
 
+
 #--------------------------------------------------------------------------------------#
 
 def iniciar() -> None:
@@ -467,11 +461,15 @@ def iniciar() -> None:
     i : int = 0
     x : int = 0
     while i < int(menu_pre_juego.N):
-        tablero : Tablero = Tablero(creador_raiz.raiz, (5 * espacio_tablero)/(4 + int(menu_pre_juego.N)), int(menu_pre_juego.N), x, reiniciar_tableros , procesar_intertableros, desaparecer_tableros, reaparecer_tableros, i)
+        tablero : Tablero = Tablero(creador_raiz.raiz, (5 * espacio_tablero)/(4 + int(menu_pre_juego.N)), int(menu_pre_juego.N), x, ganar_tableros , procesar_intertableros, desaparecer_tableros, reaparecer_tableros, i, mostrar_victoria)
         lista_tableros.append(tablero)
         i += 1
         x += (5 * espacio_tablero)/(4 + int(menu_pre_juego.N))/5
-    
+
+def mostrar_victoria():
+    for i in lista_tableros:
+        i.mostrar_victoria_tablero()
+       
 def reaparecer_tableros(x : int):
 
     for e in lista_tableros:
@@ -486,7 +484,7 @@ def desaparecer_tableros(x : int):
 
 def procesar_intertableros(): 
 
-    #Verificar inter filas:
+    #Verificar inter filas:         (0)
     contador : int = 0
     empate : int = 1
     global partida
@@ -500,10 +498,11 @@ def procesar_intertableros():
                 contador += 1
                 if contador == len(lista_tableros):
                     empate = 0
+                    pintar_tableros(0, i, j)
                     ganar_tableros()
 
 
-    #Verificar inter diagonal principal 3D:
+    #Verificar inter diagonal principal 3D:                 (1)
                     
     for j in range(0, int(menu_pre_juego.N)):
         contador = 1
@@ -513,9 +512,10 @@ def procesar_intertableros():
             contador += 1
             if contador == len(lista_tableros):
                 empate = 0
+                pintar_tableros(1,0,j)
                 ganar_tableros()
     
-    #Verificar inter diagonal secundaria 3D:
+    #Verificar inter diagonal secundaria 3D:                 (2)
                     
     for j in range(0, int(menu_pre_juego.N)):
         contador = 1
@@ -525,10 +525,11 @@ def procesar_intertableros():
             contador += 1
             if contador == len(lista_tableros):
                 empate = 0
+                pintar_tableros(2,0,j)
                 ganar_tableros()
 
 
-    #Verificar inter diagonal principal plana:         
+    #Verificar inter diagonal principal plana:             (3)
     for i in range(0, int(menu_pre_juego.N)):
         contador = 1
         for j in range(0, len(lista_tableros) - 1):
@@ -537,9 +538,10 @@ def procesar_intertableros():
             contador += 1
             if contador == len(lista_tableros):
                 empate = 0
+                pintar_tableros(3,i,0)
                 ganar_tableros()
     
-    #Verificar inter diagonal secundaria plana:         
+    #Verificar inter diagonal secundaria plana:            (4)        
     for i in range(0, int(menu_pre_juego.N)):
         contador = 1
         for j in range(0, len(lista_tableros) - 1):
@@ -548,10 +550,11 @@ def procesar_intertableros():
             contador += 1
             if contador == len(lista_tableros):
                 empate = 0
+                pintar_tableros(4,i,0)
                 ganar_tableros()
 
 
-    ##Verificar la diagonal inter tablero:
+    ##Verificar la diagonal inter tablero:           (5)
     contador = 1
     for i in range(0, int(menu_pre_juego.N) - 1):
         if lista_tableros[i].casillas[i][i].estado != lista_tableros[i+1].casillas[i+1][i+1].estado or lista_tableros[i].casillas[i][i].estado == 0 or lista_tableros[i+1].casillas[i+1][i+1].estado == 0:
@@ -559,10 +562,11 @@ def procesar_intertableros():
         contador += 1
         if contador == len(lista_tableros):
             empate = 0
+            pintar_tableros(5,0,0)
             ganar_tableros()
 
     
-    #Verificar la diagonal secundaria intertablero:
+    #Verificar la diagonal secundaria intertablero:    (6)
     contador = 1
     for i in range(0, int(menu_pre_juego.N) - 1):
         if lista_tableros[i].casillas[i][int(menu_pre_juego.N) - (i+1)].estado != lista_tableros[i+1].casillas[i+1][int(menu_pre_juego.N)- (i + 2)].estado or lista_tableros[i].casillas[i][int(menu_pre_juego.N)- (i+1)].estado == 0 or lista_tableros[i+1].casillas[i+1][int(menu_pre_juego.N)- (i + 2)].estado == 0:
@@ -570,9 +574,10 @@ def procesar_intertableros():
         contador += 1
         if contador == len(lista_tableros):
             empate = 0
+            pintar_tableros(6,0,0)
             ganar_tableros()
 
-    #Verificar la diagonal terciaria intertablero:
+    #Verificar la diagonal terciaria intertablero:              (7)
     contador = 1
     for i in range(0, int(menu_pre_juego.N) - 1):
         if lista_tableros[i].casillas[int(menu_pre_juego.N) - (i+1)][i].estado != lista_tableros[i+1].casillas[int(menu_pre_juego.N)- (i + 2)][i+1].estado or lista_tableros[i].casillas[int(menu_pre_juego.N)- (i+1)][i].estado == 0 or lista_tableros[i+1].casillas[int(menu_pre_juego.N)- (i + 2)][i+1].estado == 0:
@@ -580,9 +585,10 @@ def procesar_intertableros():
         contador += 1
         if contador == len(lista_tableros):
             empate = 0
+            pintar_tableros(7,0,0)
             ganar_tableros()
     
-    #Verificar la diagonal cuaternaria intertablero:
+    #Verificar la diagonal cuaternaria intertablero:             (8)
     contador = 1
     for i in range(0, int(menu_pre_juego.N) - 1):
         if lista_tableros[i].casillas[int(menu_pre_juego.N) - (i+1)][int(menu_pre_juego.N) - (i+1)].estado != lista_tableros[i+1].casillas[int(menu_pre_juego.N)- (i + 2)][int(menu_pre_juego.N)- (i + 2)].estado or lista_tableros[i].casillas[int(menu_pre_juego.N)- (i+1)][int(menu_pre_juego.N)- (i+1)].estado == 0 or lista_tableros[i+1].casillas[int(menu_pre_juego.N)- (i + 2)][int(menu_pre_juego.N)- (i + 2)].estado == 0:
@@ -590,7 +596,9 @@ def procesar_intertableros():
         contador += 1
         if contador == len(lista_tableros):
             empate = 0
+            pintar_tableros(8,0,0)
             ganar_tableros()
+
 
     #Verificar empate
     if all( all(all(i.estado != 0 for i in j) for j in k.casillas) for k in lista_tableros) and (empate == 1):
@@ -598,6 +606,36 @@ def procesar_intertableros():
         texto_displayer("> ¡Empate!")
         partida += 1
         reiniciar_tableros()
+
+def pintar_tableros(victoria, fila = 0, columna = 0):
+
+    if victoria == 0:
+        for i in lista_tableros:
+            i.casillas[fila][columna].pintar_casilla("pink")
+    elif victoria == 1:
+        for i in range(0, int(menu_pre_juego.N)):
+            lista_tableros[i].casillas[i][columna].pintar_casilla("pink")
+    elif victoria == 2:
+        for i in range(0, int(menu_pre_juego.N)):
+            lista_tableros[i].casillas[int(menu_pre_juego.N) - i - 1][columna].pintar_casilla("pink")
+    elif victoria == 3:
+        for i in range(0, int(menu_pre_juego.N)):
+            lista_tableros[i].casillas[fila][i].pintar_casilla("pink")
+    elif victoria == 4:
+        for i in range(0, int(menu_pre_juego.N)):
+            lista_tableros[i].casillas[fila][int(menu_pre_juego.N) - i - 1].pintar_casilla("pink")
+    elif victoria == 5:
+        for i in range(0, int(menu_pre_juego.N)):
+            lista_tableros[i].casillas[i][i].pintar_casilla("pink")
+    elif victoria == 6:
+        for i in range(0, int(menu_pre_juego.N)):
+            lista_tableros[i].casillas[i][int(menu_pre_juego.N) - i - 1].pintar_casilla("pink")
+    elif victoria == 7:
+        for i in range(0, int(menu_pre_juego.N)):
+            lista_tableros[i].casillas[int(menu_pre_juego.N) - (i+1)][i].pintar_casilla("pink")
+    elif victoria == 8:
+        for i in range(0, int(menu_pre_juego.N)):
+            lista_tableros[i].casillas[int(menu_pre_juego.N) - i - 1][int(menu_pre_juego.N) - i - 1].pintar_casilla("pink")
 
 def ganar_tableros():
     global partida 
@@ -612,7 +650,10 @@ def ganar_tableros():
         partida += 1
         actualizar_puntuacion(puntuacion)
         sleep(1)
-        reiniciar_tableros()
+
+        mostrar_victoria()
+
+        colocar_boton_continuar()
     else: 
         texto_displayer(f" > ¡{menu_pre_juego.jugador_2} ha ganado!")
         puntuacion[1] += 1
@@ -622,11 +663,25 @@ def ganar_tableros():
         partida += 1
         actualizar_puntuacion(puntuacion)
         sleep(1)
-        reiniciar_tableros()
+
+        mostrar_victoria()
+
+        colocar_boton_continuar()
 
 def reiniciar_tableros():
     for e in lista_tableros:
         e.reiniciar_tablero()
+
+        for i in e.casillas:
+            for j in i:
+                j.pintar_casilla("white")
+    
+    boton_continuar.place_forget()
+
+    for i in lista_tableros:
+        for j in i.casillas:
+            for k in j:
+                k.se_muestra = 0
 
 def cambia_turno() -> None:
     """
@@ -682,7 +737,10 @@ def actualizar_puntuacion(puntaje: List[int]) -> None:
     texto = f"{puntaje[0]}  -  {puntaje[1]}"
     texto_puntuacion_SV.set(texto)
 
+def colocar_boton_continuar():
+    boton_continuar.place(x=460, y=350)
 
+boton_continuar : tk.Button = tk.Button(creador_raiz.raiz, text='Continuar', font= ('Arial Black', 10), background="black", foreground="white", command= reiniciar_tableros)
 
 
 
