@@ -81,17 +81,24 @@ class Casilla:
     def dibujar_casilla(self):
         global turno
         self.casilla: int = self.tablero.create_rectangle(self.esq_superior_izq[0], self.esq_superior_izq[1], self.esq_superior_izq[0] + self.lado, self.esq_superior_izq[1] + self.lado, fill= 'white', outline="black")
-        nada : int = 0
         self.tablero.tag_bind(
             self.casilla,
             "<Button-1>",
-            lambda event: ((self.crear_cruz() if (turno == 1) else self.crear_circulo()) if (self.estado == 0 and self.se_muestra == 0) else nada))
+            lambda event: ((self.crear_cruz() if (turno == 1) else self.crear_circulo()) if (self.estado == 0 and self.se_muestra == 0) else None))
 
     def pintar_casilla(self, color):
         self.tablero.itemconfig(self.casilla, fill=color)
 
 class Tablero:
-    def __init__(self, raiz, M, N, x, al_ganar : Callable, al_procesar : Callable, al_tocar : Callable, al_dejar_tocar : Callable, ID : int, al_mostrar_victoria : Callable):
+    def __init__(self,
+                raiz,
+                M, N, x,
+                al_ganar : Callable[[], None],
+                al_procesar : Callable[[], None],
+                al_tocar : Callable[[], None],
+                al_dejar_tocar : Callable[[], None],
+                ID : int, 
+                al_mostrar_victoria : Callable[[], None]):
         """
         Define los atributos iniciales del tablero.
 
