@@ -497,12 +497,34 @@ def iniciar() -> None:
     ##Boton regresar
     boton_regresar.place(x=460, y=400)
 
-    ##Nombres jugadores
-    jugador_1_text.set(menu_pre_juego.jugador_1)
-    label_jugador_1.place(x=460, y=95)
+    ##Posición del nombre del jugador 1 con respecto al tamaño del nombre
+    if len(menu_pre_juego.jugador_1) >= 8:
+        jugador_1_text.set(menu_pre_juego.jugador_1[0:8])
+        label_jugador_1.place(x=452, y=95)
+    elif 5 <= len(menu_pre_juego.jugador_1) < 8:
+        jugador_1_text.set(menu_pre_juego.jugador_1)
+        label_jugador_1.place(x=458, y=95)
+    elif  3 <= len(menu_pre_juego.jugador_1) < 5:
+        jugador_1_text.set(menu_pre_juego.jugador_1)
+        label_jugador_1.place(x=465, y=95)
+    elif  0 < len(menu_pre_juego.jugador_1) < 3: 
+        jugador_1_text.set(menu_pre_juego.jugador_1)
+        label_jugador_1.place(x=470, y=95)
 
-    jugador_2_text.set(menu_pre_juego.jugador_2)
-    label_jugador_2.place(x=540, y=95)
+
+    ##Posición del nombre del jugador 2 con respecto al tamaño del nombre
+    if len(menu_pre_juego.jugador_2) >= 8:
+        jugador_2_text.set(menu_pre_juego.jugador_2[0:8])
+        label_jugador_2.place(x=522, y=95)
+    elif 5 <= len(menu_pre_juego.jugador_2) < 8:
+        jugador_2_text.set(menu_pre_juego.jugador_2)
+        label_jugador_2.place(x=528, y=95)
+    elif 3 <= len(menu_pre_juego.jugador_2) < 5:
+        jugador_2_text.set(menu_pre_juego.jugador_2)
+        label_jugador_2.place(x=535, y=95)
+    elif 0 < len(menu_pre_juego.jugador_2) < 3:
+        jugador_2_text.set(menu_pre_juego.jugador_2)
+        label_jugador_2.place(x=540, y=95)
 
     ##Tablero:
     i : int = 0
