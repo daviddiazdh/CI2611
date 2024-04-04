@@ -319,6 +319,8 @@ def eliminar_imagen_juego() -> None:
     lista_tableros = []
 
     boton_regresar.place_forget()
+    label_jugador_1.place_forget()
+    label_jugador_2.place_forget()
 
     if esta_boton == 1:
         boton_continuar.place_forget()
@@ -389,6 +391,32 @@ label_puntuacion: tk.Label = tk.Label(
 
 ##Lista de tableros
 lista_tableros : List[Tablero] = []
+
+#jugador 1 display
+jugador_1_text : tk.StringVar = tk.StringVar()
+
+label_jugador_1: tk.Label = tk.Label(
+    creador_raiz.raiz,
+    textvariable= jugador_1_text,
+    font=("Arial Black", 8),
+    background='white',
+    foreground="black",
+    highlightthickness=0
+)
+
+
+#jugador 2 display
+jugador_2_text : tk.StringVar = tk.StringVar()
+
+
+label_jugador_2: tk.Label = tk.Label(
+    creador_raiz.raiz,
+    textvariable= jugador_2_text,
+    font=("Arial Black", 8),
+    background='white',
+    foreground="black",
+    highlightthickness=0
+)
 
 def cambio_color_1(evento) -> None:
     """
@@ -468,6 +496,13 @@ def iniciar() -> None:
 
     ##Boton regresar
     boton_regresar.place(x=460, y=400)
+
+    ##Nombres jugadores
+    jugador_1_text.set(menu_pre_juego.jugador_1)
+    label_jugador_1.place(x=460, y=95)
+
+    jugador_2_text.set(menu_pre_juego.jugador_2)
+    label_jugador_2.place(x=540, y=95)
 
     ##Tablero:
     i : int = 0
