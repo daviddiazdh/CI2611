@@ -145,17 +145,7 @@ class Tablero:
                 al_dejar_tocar : Callable[[], None],
                 ID : int, 
                 al_mostrar_victoria : Callable[[], None]):
-        """
-        Define los atributos iniciales del tablero.
 
-        ### Parámetros:
-        * `raiz`: La ventana donde se coloca el tablero.
-        * `M`: Las dimensión en píxeles del tablero.
-        * `N`: Dimensión del tablero en casillas.
-
-        ### Retorno: 
-        * `None`: No devuelve nada.
-        """
         self.tablero: tk.Canvas = tk.Canvas(raiz, width = M, height = M, background="black")
         self.x = x
         self.tablero.place(x = 150 + x, y = 100 + x)
