@@ -31,6 +31,15 @@ class Casilla:
         self.dibujar_casilla()
 
     def crear_cruz(self) -> None:
+        """
+        Dibuja la cruz negra en la casilla y la agrega a una lista.
+
+        ### Parámetros:
+        * `self`: Referencia a sí mismo.
+
+        ### Retorno: 
+        * `None`: No devuelve nada.
+        """
         global turno
         linea_1 : int = self.tablero.create_line(self.esq_superior_izq[0] + self.lado / 5, self.esq_superior_izq[1] + self.lado / 5, 
                             self.esq_superior_izq[0] + self.lado * (4/5), self.esq_superior_izq[1] + self.lado * (4/5), fill = "black", width = self.lado / 5)
@@ -53,6 +62,15 @@ class Casilla:
         self.al_cambiar()
 
     def crear_circulo(self) -> None:
+        """
+        Dibuja el círculo fucsia en la casilla y lo agrega a una lista.
+
+        ### Parámetros:
+        * `self`: Referencia a sí mismo.
+
+        ### Retorno: 
+        * `None`: No devuelve nada.
+        """
         global turno
         circulo_1 : int = self.tablero.create_oval(self.esq_superior_izq[0] + self.lado / 6, self.esq_superior_izq[1] + self.lado / 6, 
                             self.esq_superior_izq[0] + self.lado * (5/6), self.esq_superior_izq[1] + self.lado * (5/6), fill = "maroon2")
@@ -73,12 +91,30 @@ class Casilla:
         self.al_cambiar()
 
     def eliminar_figura(self) -> None:
+        """
+        Elimina la cruz o el circulo que esté en la casilla.
+
+        ### Parámetros:
+        * `self`: Referencia a sí mismo.
+
+        ### Retorno: 
+        * `None`: No devuelve nada.
+        """
         self.tablero.delete(self.figura[0])
         self.tablero.delete(self.figura[1])
         self.figura.pop(0)
         self.figura.pop(0)
 
     def dibujar_casilla(self) -> None:
+        """
+        Dibuja la casilla.
+
+        ### Parámetros:
+        * `self`: Referencia a sí mismo.
+
+        ### Retorno: 
+        * `None`: No devuelve nada.
+        """
         global turno
         self.casilla: int = self.tablero.create_rectangle(self.esq_superior_izq[0], self.esq_superior_izq[1], self.esq_superior_izq[0] + self.lado, self.esq_superior_izq[1] + self.lado, fill= 'white', outline="black")
         self.tablero.tag_bind(
@@ -87,6 +123,16 @@ class Casilla:
             lambda event: ((self.crear_cruz() if (turno == 1) else self.crear_circulo()) if (self.estado == 0 and self.se_muestra == 0) else None))
 
     def pintar_casilla(self, color) -> None:
+        """
+        Pinta la casilla de un color dado.
+
+        ### Parámetros:
+        * `self`: Referencia a sí mismo.
+        * `color`: Color que se utilizará para pintar la casilla.
+
+        ### Retorno: 
+        * `None`: No devuelve nada.
+        """
         self.tablero.itemconfig(self.casilla, fill=color)
 
 class Tablero:
@@ -240,6 +286,16 @@ class Tablero:
         self.marco.place_forget()
 
     def colocar_tablero (self):
+        """
+        Coloca el tablero de nuevo.
+        Esta función se utiliza cuando se dejan de mostrar algunos tableros y luego se vuelven a mostrar.
+
+        ### Parámetros:
+        * `self`: Referencia a sí mismo.
+
+        ### Retorno: 
+        * `None`: No devuelve nada.
+        """
         self.tablero.place(x = 150 + self.x, y = 100 + self.x)
         self.marco.place(x = 150 + self.x, y= 100 + self.x - self.lado/22)
         self.tablero.update()
@@ -263,7 +319,18 @@ class Tablero:
         self.tablero.update()
 
     def pintar_tablero (self, victoria, lugar = 0):
-        
+        """
+        Pinta las casillas de una figura ganadora. 
+        Es capaz de saber dónde se ganó gracias a el parámetro `lugar`, que indica alguna referencia de columna o fila donde se ganó.
+
+        ### Parámetros:
+        * `self`: Referencia a sí mismo.
+        * `victoria`: Identificador del tipo de victoria. 
+        * `lugar`: Referencia a fila o columna donde ocurrió la victoria.
+
+        ### Retorno: 
+        * `None`: No devuelve nada.
+        """
         if victoria == 0:
             for i in self.casillas[lugar]:
                 i.pintar_casilla("pink")
@@ -278,14 +345,41 @@ class Tablero:
                 self.casillas[i][self.N - (i + 1)].pintar_casilla("pink")
 
     def mostrar_victoria_tablero (self):
+        """
+        Prepara el estado de todas las casillas para que no se pueda jugar mientras se muestra una victoria.
+
+        ### Parámetros:
+        * `self`: Referencia a sí mismo.
+
+        ### Retorno: 
+        * `None`: No devuelve nada.
+        """
         for i in self.casillas:
             for j in i:
                 j.se_muestra = 1
 
     def llamar_a_desaparecer_tableros (self):
+        """
+        Hace una llamada a la función desaparecer_tableros que básicamente desaparece todos los tableros excepto en el que hiciste click.
+
+        ### Parámetros:
+        * `self`: Referencia a sí mismo.
+
+        ### Retorno: 
+        * `None`: No devuelve nada.
+        """
         self.al_tocar(self.ID)
 
     def llamar_a_reaparecer_tableros (self):
+        """
+        Hace una llamada a la función reaparecer_tableros que básicamente reaparece todos los tableros.
+
+        ### Parámetros:
+        * `self`: Referencia a sí mismo.
+
+        ### Retorno: 
+        * `None`: No devuelve nada.
+        """
         self.al_dejar_tocar(self.ID)
 
 #Funciones para botones#
@@ -542,23 +636,60 @@ def iniciar() -> None:
         x += (5 * espacio_tablero)/(4 + int(menu_pre_juego.N))/5
 
 def mostrar_victoria() -> None:
+    """
+    Hace un llamado a todos los tableros para que dispongan las casillas a no ser modificadas mientras se muestra una victoria.
+
+    ### Parámetros:
+    * `self`: Referencia a sí mismo.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """
     for i in lista_tableros:
         i.mostrar_victoria_tablero()
        
 def reaparecer_tableros(x : int) -> None:
+    """
+    Hace un llamado a todos los tableros para que reaparezcan.
 
+    ### Parámetros:
+    * `self`: Referencia a sí mismo.
+    * `x` : ID del tablero que la llamó.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """
     for e in lista_tableros:
         if e.ID != x:
             e.colocar_tablero()
 
 def desaparecer_tableros(x : int) -> None:
+    """
+    Hace un llamado a todos los tableros excepto el de ID: `x` para que desparezcan.
 
+    ### Parámetros:
+    * `self`: Referencia a sí mismo.
+    * `x` : ID del tablero que la llamó.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """
     for e in lista_tableros:
         if e.ID != x:
             e.eliminar_tablero()
 
 def procesar_intertableros(ya_gano: bool = False) -> None: 
+    """
+    Procesa todas las posibles victorias en intertableros. 
+    Recibe un parámetro que le indica si ya se ganó en un tablero para que no llamé a ganar_partida, sino que solo pinte la victoria.
 
+    ### Parámetros:
+    * `self`: Referencia a sí mismo.
+    * `ya_gano`: Variable booleana que indica si ya se ganó en un tablero.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """
     gano_tablero: bool = False
     contador : int = 0
     empate : int = 1
@@ -700,7 +831,19 @@ def procesar_intertableros(ya_gano: bool = False) -> None:
             colocar_boton_continuar()
 
 def pintar_tableros(victoria : int, fila : int = 0, columna : int  = 0) -> None:
+    """
+    Pinta las casillas de los tableros según el tipo de victoria, la fila o la columna en la que se gane.
+    La variable `victoria` se utiliza como un ID de los tipos de victoria.
 
+    ### Parámetros:
+    * `self`: Referencia a sí mismo.
+    * `victoria`: ID del tipo de victoria.
+    * `fila`: Hace referencia a la fila en la que se ganó.
+    * `columna`: Hace referencia a la columna en la que se ganó.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """    
     if victoria == 0:
         for i in lista_tableros:
             i.casillas[fila][columna].pintar_casilla("pink")
@@ -729,7 +872,17 @@ def pintar_tableros(victoria : int, fila : int = 0, columna : int  = 0) -> None:
         for i in range(0, int(menu_pre_juego.N)):
             lista_tableros[i].casillas[int(menu_pre_juego.N) - i - 1][int(menu_pre_juego.N) - i - 1].pintar_casilla("pink")
 
-def ganar_tableros():
+def ganar_tableros() -> None:
+    """
+    Se llama una vez cuando procesar_intertableros encuentra uno o más patrones de victoria. 
+    Modifica la puntuación, el displayer, los turnos, la diposición de las casillas para que no se pueda seguir jugando y coloca un botón continuar para que sigas jugando.
+
+    ### Parámetros:
+    * No recibe parámetros.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """     
     global partida 
     global turno
 
@@ -760,7 +913,17 @@ def ganar_tableros():
 
         colocar_boton_continuar()
 
-def reiniciar_tableros():
+def reiniciar_tableros() -> None:
+    """
+    Llama al método reiniciar_tablero de cada tablero.
+    También llama al método pintar_casilla de todas las casillas de todos los tableros para que se vuelvan a pintar de blanco y deje de mostrar la figura de victoria.
+
+    ### Parámetros:
+    * No recibe parámetros.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """  
     for e in lista_tableros:
         e.reiniciar_tablero()
 
@@ -832,7 +995,16 @@ def actualizar_puntuacion(puntaje: List[int]) -> None:
     texto = f"{puntaje[0]}  -  {puntaje[1]}"
     texto_puntuacion_SV.set(texto)
 
-def colocar_boton_continuar():
+def colocar_boton_continuar() -> None:
+    """
+    Simplemente coloca el botón continuar.
+
+    ### Parámetros:
+    * No recibe parámetros.
+
+    ### Retorno: 
+    * `None`: No devuelve nada.
+    """  
     boton_continuar.place(x=460, y=350)
 
     global esta_boton
